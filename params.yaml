@@ -1,16 +1,15 @@
 # Input file to define the parameter for the script.
-object_name : 'GJ411'  # Name of the object, must be a python starting
+object_name : 'Object_Name'  # Name of the object, must be a python starting
                        # (used by the GLS Script and to create the outputs)
 savepath : './' # Path were the plots will be saved
-rv_files : ['J11033+359.avc.dat'] # Path to the file(s) that contains the RV data.
+rv_files : ['path_to_rvs'] # Path to the file(s) that contains the RV data.
                                   # First column must be the times, second the RV and third the RV errors
-test_period : 12.940  # The Period which you think is the true Period of the planet given in [days]
+test_period : 1  # The Period which you think is the true Period of the planet given in [days]
 
-mc_samples : 5 # Number of MC samples to perform. 100 seems to be enough.
+mc_samples : 100 # Number of MC samples to perform. 100 seems to be enough.
 
-use_multiprocessing : False # Wether to use mutliprocessing to calculate the simulated GLS or not
-
-num_proccesses : 1 # Number of processes to use when use_multiprocessing is True
+num_processes : 1 # Number of processes used when sampling the simulated GLS.
+                   # If num_processes > 1, multiprocessing will be used.
 
 alias_order : 1 # alias frequencies are found at f_alias : f_test +/- m * f_sampling
                 # Define up to which oder of m the panels should be plotted (1 or 2)
@@ -28,7 +27,7 @@ power_threshold : 0.06 # power threshold (ZK normalization) to find peaks
 search_phase_range : 0.00005 # frequency range to search for new maxima in
                              # simulated data bases on real data GLS peaks
 
-offsets : [0] # Can be used to
+offsets : [0] # If several RV datasets are given, these define the offsets between them
 substract : False  # Wether to remove a sinusoidal signal from the data beforehand
                    # using sinus function 1: Subtract most significant period,
                    #                      2: Subtract second most significant period

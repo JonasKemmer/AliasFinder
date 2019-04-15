@@ -15,8 +15,13 @@ import af_calc
 import af_plots
 import af_utils
 
-warnings.filterwarnings("ignore")
 
+__author__ = "Jonas Kemmer, Stephan Stock @ ZAH, Landessternwarte Heidelberg"
+__version__ = "1.0."
+__license__ = "MIT"
+
+
+warnings.filterwarnings("ignore")
 
 if __name__ == '__main__':
     # Input the parameter set in the parameter file - the list of possible
@@ -32,8 +37,7 @@ if __name__ == '__main__':
                       'rv_files': [],
                       'test_period': 50,
                       'mc_samples': 100,
-                      'use_multiprocessing': False,
-                      'num_proccesses': 1,
+                      'num_processes': 1,
                       'alias_order': 1,
                       'panel_width': 1,
                       'fbeg': 0.0001,
@@ -191,22 +195,22 @@ if __name__ == '__main__':
         gls_sim_powers = np.zeros((mc_samples, len(gls_obs.power)))
         freqs_array = np.zeros((mc_samples, len(gls_obs.freq)))
         sim_phases = np.zeros((mc_samples, len(peaks_data[2])))
-        if use_multiprocessing:
+        if num_processes > 1:
             pbar = tqdm(total=mc_samples)
             def update(*a):
                 pbar.update()
-            with Pool(num_proccesses) as p:
-                for idx in range(pbar.total):
+            with Pool(num_processes) as p:
+                res_temp = [p.apply_async(af_calc.sample_gls,
+                                          args=(times, gls_obs, freq,  jitter,
+                                                rvs_err, fbeg,  fend,
+                                                object_name, peaks_data,
+                                                search_phase_range),
+                                          callback=update)
+                            for i in range(pbar.total)]
+                for idx, result in enumerate(res_temp):
                     gls_sim_powers[idx], \
                      freqs_array[idx], \
-                     sim_phases[idx] = p.apply_async(af_calc.sample_gls,
-                                                     args=(times, gls_obs,
-                                                           freq,  jitter,
-                                                           rvs_err, fbeg,
-                                                           fend, object_name,
-                                                           peaks_data,
-                                                           search_phase_range),
-                                                     callback=update).get()
+                     sim_phases[idx] = result.get()
         else:
             for i in tqdm(range(0, mc_samples)):
                 gls_sim_powers[i], \
@@ -224,6 +228,9 @@ if __name__ == '__main__':
                                 sim_phases=sim_phases)
 
     plt.tight_layout()
-    plt.savefig(os.path.join(savepath, f'{object_name}_alias_test.pdf'),
+    save_var = os.path.join(savepath, f'{object_name}_{test_period}d'
+                            '_alias_test.pdf')
+    plt.savefig(save_var,
                 bbox_inches='tight', dpi=400)
     plt.show()
+    print(f'\n \n Plot saved to {save_var}')

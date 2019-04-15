@@ -2,7 +2,7 @@ import numpy as np
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.projections import get_projection_class
 from matplotlib.transforms import blended_transform_factory
-from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import MaxNLocator, FixedLocator
 from scipy.stats import circmean, circstd
 
 
@@ -45,8 +45,9 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
     for panel_idx, panel in enumerate(panel_borders):
         ax = fig.add_subplot(gs[plot_row, panel_idx])
         ax.set_xlim(panel)
-        ax.set_ylim(0, np.max((np.nanmax(gls_sim_powers),
-                               np.nanmax(gls_obs.p)))*1.4)
+        ax.set_ylim(0, np.max((np.nanmax(np.percentile(gls_sim_powers, 97.5,
+                                                       axis=0)),
+                               np.nanmax(gls_obs.power)))*1.5)
         if panel_idx == 0:
             ax = plot_info(ax, sim_freq, label=True)
         else:
@@ -54,8 +55,13 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
             ax = plot_info(ax, sim_freq)
         ax = plot_lines(ax, gls_obs, gls_sim_powers, intervals=conf_intervals)
         ax = plot_phase_information(ax, peak_pos, obs_phases, sim_phases)
-        ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune='upper',
-                                               min_n_ticks=3))
+        if len(panel_borders) == 3:
+            ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune='upper',
+                                                   min_n_ticks=3))
+        else:
+            loc = FixedLocator(np.round([panel[0]+(panel[1]-panel[0])/5,
+                                         panel[0]+3*(panel[1]-panel[0])/5], 4))
+            ax.xaxis.set_major_locator(loc)
         d = .015
         if panel_idx == 0:
             ax.tick_params(labelright='off')
@@ -114,7 +120,7 @@ def get_theta(phase):
 
 
 def plot_phase_clock(theta_obs, theta_sim, range_sims, freq,
-                     main_axis, width=0.25):
+                     main_axis, width=0.3):
     """ Plot function for an inset phase-clock """
     trans = blended_transform_factory(main_axis.transData,
                                       main_axis.transAxes)
@@ -171,5 +177,5 @@ def plot_info(ax, freq, label=False):
 #        ax.text(0.05, 1.05, f'sim. P = {1/freq:.4f} d',
 #                transform=ax.transAxes,
 #                horizontalalignment='left', fontsize='smaller')
-    ax.axvline(freq, color='grey', linestyle='--')
+    ax.axvline(freq, color='blue', linestyle='--')
     return ax

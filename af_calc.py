@@ -70,6 +70,8 @@ def sim_any_sinmode(gls_obj, in_freq, times):
 
     """
     k = np.where(np.round(gls_obj.freq, 5) == in_freq)[0]
+    if len(k) > 1:
+        k = k[0]
     amp = np.sqrt(gls_obj._a[k]**2 + gls_obj._b[k]**2)
     ph = np.arctan2(gls_obj._a[k], gls_obj._b[k])/(2.*np.pi)
     T0 = times.min() - ph/in_freq
@@ -121,7 +123,7 @@ def sample_gls(times, gls_obs, freq, jitter, rvs_err, fbeg, fend, object_name,
     ls_sim = af_utils.get_gls(times, rvs_sim, rvs_err, fbeg, fend, object_name,
                               freq_array=gls_obs.freq)
     dummy_freq_array = np.zeros(np.size(peaks_data[0]))
-    #search for phases of max power using a certian frequency
+    # search for phases of max power using a certian frequency
     # range and the prior of data peaks
     for j in range(0, np.size(peaks_data[0])):
         index_frequencies = np.where(np.logical_and(ls_sim.freq >= peaks_data[0][j]
