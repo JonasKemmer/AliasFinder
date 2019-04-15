@@ -89,9 +89,9 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
             ax.spines['left'].set_visible(False)
 
 
-
 def plot_lines(ax, gls_obs, gls_sim_powers,
-               intervals=[[25., 75.], [10., 90.], [2.5, 97.5]]):
+               intervals=[[25., 75.], [10., 90.], [2.5, 97.5]],
+               alph_int=[0.2, 0.5, 0.8]):
     """ Plots the observed data and the simulated data and
         their confidence intervals.
 
@@ -106,11 +106,11 @@ def plot_lines(ax, gls_obs, gls_sim_powers,
     freq = gls_obs.freq[panel_mask]
     sim_powers = np.median(gls_sim_powers, axis=0)[panel_mask]
     ax.plot(freq, sim_powers, color='black', linestyle='-')
-    for percentile in intervals:
+    for alpha, percentile in zip(alph_int, intervals):
         lower, upper = np.percentile(gls_sim_powers, percentile,
                                      axis=0)
         ax.fill_between(freq, lower[panel_mask], upper[panel_mask],
-                        facecolor='gray', alpha=0.5)
+                        facecolor='gray', alpha=alpha)
     ax.plot(gls_obs.freq, gls_obs.power, color='red', linestyle='-')
     return ax
 
