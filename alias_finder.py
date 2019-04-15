@@ -36,10 +36,12 @@ if __name__ == '__main__':
                       'savepath': './',
                       'rv_files': [],
                       'test_period': 50,
+                      'sampling_freq': None,
                       'mc_samples': 100,
                       'num_processes': 1,
                       'alias_order': 1,
                       'panel_width': 1,
+                      'hide_xlabel': True,
                       'fbeg': 0.0001,
                       'fend': 2.5,
                       'power_threshold': 0.05,
@@ -60,34 +62,42 @@ if __name__ == '__main__':
     # Read in the observed RV data
     times, rvs, rvs_err = af_utils.read_rvs(rv_files, offsets)
 
-    # First analyze the spectral window function of the data and select a sampling
-    # frequency who's aliases should be analyzed
-    window_freqs = np.linspace(fbeg, fend, len(times)*30)
-    window_powers = af_utils.get_spectral_window_function(window_freqs, times)
+    if sampling_freq is None:
+        # First analyze the spectral window function of the data and select a
+        # sampling frequency who's aliases should be analyzed
+        window_freqs = np.linspace(fbeg, fend, len(times)*30)
+        window_powers = af_utils.get_spectral_window_function(window_freqs,
+                                                              times)
 
-    print('Please select the sampling frequency you want to test from the plot')
-    fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1)
-    plt.title('Spectral window function of the data\n'
-              'Please select the sampling frequency you want to test '
-              '(Press any button then click)')
-    plt.xlabel('Frequency f [1/d]')
-    plt.ylabel(r'Power W($\nu$)')
-    ax.plot(window_freqs, window_powers)
-    plt.savefig(f'{object_name}_spectral_window_function.pdf',
-                bbox_inches='tight', dpi=400)
-    cursor = Cursor(ax, useblit=True, color='k', linewidth=1)
-    zoom_ok = False
-    print('\nZoom or pan to view, \npress any button when ready to click:\n')
-    while not zoom_ok:
-        zoom_ok = plt.waitforbuttonpress()
-    sampling_freq = plt.ginput(1)
-    sampling_freq = np.round(sampling_freq[0][0], 5)
-    plt.close()
-    print(f'Your selected sampling frequency is {sampling_freq}')
+        print('Please select the sampling frequency you want to test '
+              'from the plot')
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        plt.title('Spectral window function of the data\n'
+                  'Please select the sampling frequency you want to test '
+                  '(Press any button then click)')
+        plt.xlabel('Frequency f [1/d]')
+        plt.ylabel(r'Power W($\nu$)')
+        ax.plot(window_freqs, window_powers)
+        plt.savefig(f'{object_name}_spectral_window_function.pdf',
+                    bbox_inches='tight', dpi=400)
+        cursor = Cursor(ax, useblit=True, color='k', linewidth=1)
+        zoom_ok = False
+        print('\nZoom or pan to view, \npress any button when ready'
+              ' to click:\n')
+        while not zoom_ok:
+            zoom_ok = plt.waitforbuttonpress()
+        sampling_freq = plt.ginput(1)
+        sampling_freq = np.round(sampling_freq[0][0], 5)
+        plt.close()
+        print(f'Your selected sampling frequency is {sampling_freq}')
+    else:
+        print(f'Sampling frequency (f = {sampling_freq}) taken from the input '
+              'file')
 
     # Second, create an GLS from the observed RVs
-    gls_obs = af_utils.get_gls(times, rvs, rvs_err, fbeg, fend, object_name)
+    gls_obs = af_utils.get_gls(times, rvs, rvs_err, fbeg, fend,
+                               object_name)
 
     # If a Kepler signal is to be substracted:
     if substract == 1:
@@ -173,16 +183,21 @@ if __name__ == '__main__':
         raise Exception('Orders higher than m=2 are not implemented.')
 
     # Initializing the plot and starting the simulations
-    fig = plt.figure(figsize=(7, 5))
+    fig = plt.figure(figsize=(7, 4))
     if alias_order == 1:
         gs = gridspec.GridSpec(3, 3)
     else:
         gs = gridspec.GridSpec(3, 5)
-    gs.update(wspace=0.08, hspace=0.25)
+
+    if hide_xlabel:
+        gs.update(wspace=0.08, hspace=0)
+    else:
+        gs.update(wspace=0.08, hspace=0.25)
+
     matplotlib.rc('xtick', labelsize=9)
     matplotlib.rc('ytick', labelsize=9)
-    fig.text(0.5, 0.04, 'Frequency f [1/d]', ha='center')
-    fig.text(0.04, 0.5, gls_obs.label["ylabel"], va='center',
+    fig.text(0.5, 0.02, 'Frequency f [1/d]', ha='center')
+    fig.text(0.05, 0.5, gls_obs.label["ylabel"], va='center',
              rotation='vertical')
 
     if use_rms_as_jitter:
@@ -225,7 +240,8 @@ if __name__ == '__main__':
                                 gls_obs=gls_obs, gls_sim_powers=gls_sim_powers,
                                 peak_pos=peaks_data[0],
                                 obs_phases=peaks_data[2],
-                                sim_phases=sim_phases)
+                                sim_phases=sim_phases,
+                                hide_xlabel=hide_xlabel)
 
     plt.tight_layout()
     save_var = os.path.join(savepath, f'{object_name}_{test_period}d'

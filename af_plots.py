@@ -2,14 +2,15 @@ import numpy as np
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib.projections import get_projection_class
 from matplotlib.transforms import blended_transform_factory
-from matplotlib.ticker import MaxNLocator, FixedLocator
+from matplotlib.ticker import MaxNLocator, FixedLocator, NullLocator
 from scipy.stats import circmean, circstd
 
 
 def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
                    sim_freq=None, gls_obs=None, gls_sim_powers=None,
                    conf_intervals=[[25., 75.], [10., 90.], [2.5, 97.5]],
-                   peak_pos=None, obs_phases=None, sim_phases=None):
+                   peak_pos=None, obs_phases=None, sim_phases=None,
+                   hide_xlabel=True):
     """ Wrapper function to plot one row that contains one simulation.
 
     Parameters
@@ -45,9 +46,9 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
     for panel_idx, panel in enumerate(panel_borders):
         ax = fig.add_subplot(gs[plot_row, panel_idx])
         ax.set_xlim(panel)
-        ax.set_ylim(0, np.max((np.nanmax(np.percentile(gls_sim_powers, 97.5,
+        ax.set_ylim(0, np.max((np.nanmax(np.percentile(gls_sim_powers, 95,
                                                        axis=0)),
-                               np.nanmax(gls_obs.power)))*1.5)
+                               np.nanmax(gls_obs.power)))*1.4)
         if panel_idx == 0:
             ax = plot_info(ax, sim_freq, label=True)
         else:
@@ -55,14 +56,18 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
             ax = plot_info(ax, sim_freq)
         ax = plot_lines(ax, gls_obs, gls_sim_powers, intervals=conf_intervals)
         ax = plot_phase_information(ax, peak_pos, obs_phases, sim_phases)
-        if len(panel_borders) == 3:
-            ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune='upper',
-                                                   min_n_ticks=3))
+        if np.logical_and(hide_xlabel, plot_row == 2) or not hide_xlabel:
+            if len(panel_borders) == 3:
+                ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune='upper',
+                                                       min_n_ticks=3))
+            else:
+                loc = FixedLocator(np.round([panel[0]+0.8*(panel[1]-panel[0])/3,
+                                             panel[0]+2.2*(panel[1]-panel[0])/3],
+                                            4))
+                ax.xaxis.set_major_locator(loc)
         else:
-            loc = FixedLocator(np.round([panel[0]+0.8*(panel[1]-panel[0])/3,
-                                         panel[0]+2.2*(panel[1]-panel[0])/3],
-                                        4))
-            ax.xaxis.set_major_locator(loc)
+            ax.xaxis.set_major_locator(NullLocator())
+
         d = .015
         if panel_idx == 0:
             ax.tick_params(labelright='off')
@@ -91,7 +96,7 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
 
 def plot_lines(ax, gls_obs, gls_sim_powers,
                intervals=[[25., 75.], [10., 90.], [2.5, 97.5]],
-               alph_int=[0.2, 0.5, 0.8]):
+               alph_int=[0.8, 0.5, 0.2]):
     """ Plots the observed data and the simulated data and
         their confidence intervals.
 

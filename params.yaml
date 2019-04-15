@@ -1,10 +1,18 @@
 # Input file to define the parameter for the script.
 object_name : 'Object_Name'  # Name of the object, must be a python starting
                        # (used by the GLS Script and to create the outputs)
+
 savepath : './' # Path were the plots will be saved
+
 rv_files : ['path_to_rvs'] # Path to the file(s) that contains the RV data.
                                   # First column must be the times, second the RV and third the RV errors
+
+offsets : [0] # If several RV datasets are given, these define the offsets between them
+
 test_period : 1  # The Period which you think is the true Period of the planet given in [days]
+
+sampling_freq : None # If default(=None), the sampling frequency can be choosen from the plot of the window function.
+                     # Otherwise a frequency [1/day] must be given.
 
 mc_samples : 100 # Number of MC samples to perform. 100 seems to be enough.
 
@@ -17,6 +25,8 @@ alias_order : 1 # alias frequencies are found at f_alias : f_test +/- m * f_samp
 panel_width : 1  # [days] width of the plot panels around the
                  # simulated frequencies
 
+hide_xlabel: True # If set to false, xlabels will be plotted for each row
+
 fbeg : 0.0001  # GLS frequency range (change to get better zoom,
                # default is good for first overview
 fend : 2.5
@@ -27,9 +37,9 @@ power_threshold : 0.06 # power threshold (ZK normalization) to find peaks
 search_phase_range : 0.00005 # frequency range to search for new maxima in
                              # simulated data bases on real data GLS peaks
 
-offsets : [0] # If several RV datasets are given, these define the offsets between them
 substract : False  # Wether to remove a sinusoidal signal from the data beforehand
                    # using sinus function 1: Subtract most significant period,
                    #                      2: Subtract second most significant period
+
 use_rms_as_jitter : True  # Use rms of the Rvs as jitter
 jitter : 0                # Can be used to insert the jitter of a planet fit in simulated data
