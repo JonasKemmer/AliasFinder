@@ -59,8 +59,9 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
             ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune='upper',
                                                    min_n_ticks=3))
         else:
-            loc = FixedLocator(np.round([panel[0]+(panel[1]-panel[0])/5,
-                                         panel[0]+3*(panel[1]-panel[0])/5], 4))
+            loc = FixedLocator(np.round([panel[0]+0.8*(panel[1]-panel[0])/3,
+                                         panel[0]+2.2*(panel[1]-panel[0])/3],
+                                        4))
             ax.xaxis.set_major_locator(loc)
         d = .015
         if panel_idx == 0:
