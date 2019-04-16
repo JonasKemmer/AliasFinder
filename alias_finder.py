@@ -24,6 +24,8 @@ __license__ = "MIT"
 warnings.filterwarnings("ignore")
 
 if __name__ == '__main__':
+    print(f' \n'
+          f'Welcome to the Alias Finder V{__version__}\n')
     # Input the parameter set in the parameter file - the list of possible
     # arguments is defined in the default_params-dictionairy
     with open(str(sys.argv[1])) as stream:
@@ -92,8 +94,10 @@ if __name__ == '__main__':
         plt.close()
         print(f'Your selected sampling frequency is {sampling_freq}')
     else:
-        print(f'Sampling frequency (f = {sampling_freq}) taken from the input '
-              'file')
+        print(f'Sampling frequency (f = {sampling_freq}) given in the input '
+              'file.\nSkipping selection from plot of the window function.\n'
+              'If you want to select the sampling frequeny from the window '
+              'function\nplease set the it to "None" in the input file.\n')
 
     # Second, create an GLS from the observed RVs
     gls_obs = af_utils.get_gls(times, rvs, rvs_err, fbeg, fend,
@@ -134,11 +138,11 @@ if __name__ == '__main__':
                                                                     wanted_freq),
                                     5)
             check = input(f'Please check {idx+1}. frequency you want to simulate\n'
-                          f'The predicted freq is: {wanted_freq}\n'
-                          f'The closest found freq is: {closest_freq}\n'
+                          f'The predicted freq is:            {wanted_freq}\n'
+                          f'The closest found freq is:        {closest_freq}\n'
                           f'Do they fit? (yes/no)\n'
                           f'(If you want to manually choose another \n'
-                          f'frequency please also type \'no\')  ')
+                          f'frequency please also type \'no\')  \n')
             if check.lower() == 'yes' or check.lower() == 'y':
                 sim_freqs[idx] = closest_freq
                 break

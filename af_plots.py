@@ -46,9 +46,9 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
     for panel_idx, panel in enumerate(panel_borders):
         ax = fig.add_subplot(gs[plot_row, panel_idx])
         ax.set_xlim(panel)
-        ax.set_ylim(0, np.max((np.nanmax(np.percentile(gls_sim_powers, 95,
+        ax.set_ylim(0, np.max((np.nanmax(np.percentile(gls_sim_powers, 97.5,
                                                        axis=0)),
-                               np.nanmax(gls_obs.power)))*1.4)
+                               np.nanmax(gls_obs.power)))*1.45)
         if panel_idx == 0:
             ax = plot_info(ax, sim_freq, label=True)
         else:
