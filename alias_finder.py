@@ -63,8 +63,7 @@ if __name__ == '__main__':
 
     # Read in the observed RV data
     times, rvs, rvs_err = af_utils.read_rvs(rv_files, offsets)
-
-    if sampling_freq is None:
+    if sampling_freq is None or sampling_freq == 'None':
         # First analyze the spectral window function of the data and select a
         # sampling frequency who's aliases should be analyzed
         window_freqs = np.linspace(fbeg, fend, len(times)*30)
@@ -80,17 +79,28 @@ if __name__ == '__main__':
                   '(Press any button then click)')
         plt.xlabel('Frequency f [1/d]')
         plt.ylabel(r'Power W($\nu$)')
-        ax.plot(window_freqs, window_powers)
-        plt.savefig(f'{object_name}_spectral_window_function.pdf',
-                    bbox_inches='tight', dpi=400)
+        ax.plot(window_freqs, window_powers, color='black')
         cursor = Cursor(ax, useblit=True, color='k', linewidth=1)
         zoom_ok = False
         print('\nZoom or pan to view, \npress any button when ready'
-              ' to click:\n')
+              ' to select the sampling frequency - then click:\n')
         while not zoom_ok:
             zoom_ok = plt.waitforbuttonpress()
         sampling_freq = plt.ginput(1)
         sampling_freq = np.round(sampling_freq[0][0], 5)
+        plt.axis('auto')
+        plt.autoscale()
+        plt.xlim(0, 1.2)
+        plt.title('')
+        fig.set_size_inches(3.5, 3, forward=True)
+        axins = ax.inset_axes([0.2, 0.53, 0.4, 0.4])
+        axins.plot(window_freqs, window_powers, color='black')
+        axins.set_xlim(0.99, 1.01)
+        axins.xaxis.label.set_fontsize(4)
+        axins.yaxis.label.set_fontsize(4)
+        plt.tight_layout()
+        plt.savefig(f'{object_name}_spectral_window_function.pdf',
+                    bbox_inches='tight', dpi=400)
         plt.close()
         print(f'Your selected sampling frequency is {sampling_freq}')
     else:
