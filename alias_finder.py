@@ -99,7 +99,9 @@ if __name__ == '__main__':
         axins.xaxis.label.set_fontsize(4)
         axins.yaxis.label.set_fontsize(4)
         plt.tight_layout()
-        plt.savefig(f'{object_name}_spectral_window_function.pdf',
+        save_var = os.path.join(savepath, f'{object_name}_spectral_window_'
+                                          'function.pdf')
+        plt.savefig(save_var,
                     bbox_inches='tight', dpi=400)
         plt.close()
         print(f'Your selected sampling frequency is {sampling_freq}')
