@@ -22,7 +22,7 @@ num_processes : 1 # Number of processes used when sampling the simulated GLS.
 alias_order : 1 # alias frequencies are found at f_alias : f_test +/- m * f_sampling
                 # Define up to which oder of m the panels should be plotted (1 or 2)
 
-panel_width : 1  # [days] width of the plot panels around the
+panel_width : 0.006  # width of the plot panels around the
                  # simulated frequencies
 
 hide_xlabel: True # If set to false, xlabels will be plotted for each row
