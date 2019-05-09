@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import yaml
 from matplotlib.widgets import Cursor
+from matplotlib.ticker import MaxNLocator
 from tqdm import tqdm
 
 import af_calc
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     if sampling_freq is None or sampling_freq == 'None':
         # First analyze the spectral window function of the data and select a
         # sampling frequency who's aliases should be analyzed
-        window_freqs = np.linspace(fbeg, fend, len(times)*30)
+        window_freqs = np.linspace(fbeg, fend, len(times)*25)
         window_powers = af_utils.get_spectral_window_function(window_freqs,
                                                               times)
 
@@ -150,8 +151,10 @@ if __name__ == '__main__':
                                                                     wanted_freq),
                                     5)
             check = input(f'Please check {idx+1}. frequency you want to simulate\n'
-                          f'The predicted freq is:            {wanted_freq}\n'
-                          f'The closest found freq is:        {closest_freq}\n'
+                          f'The predicted freq is:            {wanted_freq} '
+                          f'(= {(1/wanted_freq):.4f} d)\n'
+                          f'The closest found freq is:        {closest_freq} '
+                          f'(= {(1/closest_freq):.4} d)\n'
                           f'Do they fit? (yes/no)\n'
                           f'(If you want to manually choose another \n'
                           f'frequency please also type \'no\')  \n')
@@ -184,12 +187,18 @@ if __name__ == '__main__':
                     raise Exception('No frequency to simulate!')
 
     # Definition of the borders of the plot panels
-    f1s = 1/(test_period+panel_width)
-    f1e = 1/(test_period-panel_width)
-    f2s = np.abs(1/(test_period-panel_width)-sampling_freq)
-    f2e = np.abs(1/(test_period+panel_width)-sampling_freq)
-    f3s = np.abs(1/(test_period+panel_width)+sampling_freq)
-    f3e = np.abs(1/(test_period-panel_width)+sampling_freq)
+    f1s = 1/(test_period) - panel_width
+    f1e = 1/(test_period) + panel_width
+    f2s = np.abs(1/(test_period)-sampling_freq) - panel_width
+    f2e = np.abs(1/(test_period)-sampling_freq) + panel_width
+    f3s = np.abs(1/(test_period)+sampling_freq) - panel_width
+    f3e = np.abs(1/(test_period)+sampling_freq) + panel_width
+    # f1s = 1/(test_period+panel_width)
+    # f1e = 1/(test_period-panel_width)
+    # f2s = np.abs(1/(test_period-panel_width)-sampling_freq)
+    # f2e = np.abs(1/(test_period+panel_width)-sampling_freq)
+    # f3s = np.abs(1/(test_period+panel_width)+sampling_freq)
+    # f3e = np.abs(1/(test_period-panel_width)+sampling_freq)
     if alias_order == 1:
         panels = np.array([[f1s, f1e], [f2s, f2e], [f3s, f3e]])
     elif alias_order == 2:
@@ -221,6 +230,9 @@ if __name__ == '__main__':
     else:
         jitter = jitter
 
+
+    ylim_max = np.nanmax(gls_obs.power)
+    axes = []
     for sim_freq_idx, freq in enumerate(sim_freqs):
         print(f'\n Simulating Freq. # {sim_freq_idx+1:.0f}\n')
         gls_sim_powers = np.zeros((mc_samples, len(gls_obs.power)))
@@ -251,13 +263,25 @@ if __name__ == '__main__':
                                                     fend, object_name,
                                                     peaks_data,
                                                     search_phase_range)
-        af_plots.plot_panel_row(fig, gs, plot_row=sim_freq_idx,
-                                panel_borders=panels, sim_freq=freq,
-                                gls_obs=gls_obs, gls_sim_powers=gls_sim_powers,
-                                peak_pos=peaks_data[0],
-                                obs_phases=peaks_data[2],
-                                sim_phases=sim_phases,
-                                hide_xlabel=hide_xlabel)
+        ylim_max = np.nanmax([ylim_max, np.nanmax(np.percentile(gls_sim_powers,
+                                                                97.5, axis=0))])
+        ax = af_plots.plot_panel_row(fig, gs, plot_row=sim_freq_idx,
+                                     panel_borders=panels, sim_freq=freq,
+                                     gls_obs=gls_obs,
+                                     gls_sim_powers=gls_sim_powers,
+                                     peak_pos=peaks_data[0],
+                                     obs_phases=peaks_data[2],
+                                     sim_phases=sim_phases,
+                                     hide_xlabel=hide_xlabel)
+        axes.append(ax)
+    for row in axes:
+        for idx, ax in enumerate(row):
+            ax.set_ylim(0, ylim_max*1.45)
+            if idx == 0:
+                ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune='upper',
+                                                       min_n_ticks=3))
+            else:
+                ax.set_yticklabels([])
 
     plt.tight_layout()
     save_var = os.path.join(savepath, f'{object_name}_{test_period}d'

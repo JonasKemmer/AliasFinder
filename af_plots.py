@@ -43,12 +43,13 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
         Array with the phase information for the peaks in the simulated data.
 
     """
+    axes_row = []
     for panel_idx, panel in enumerate(panel_borders):
         ax = fig.add_subplot(gs[plot_row, panel_idx])
         ax.set_xlim(panel)
-        ax.set_ylim(0, np.max((np.nanmax(np.percentile(gls_sim_powers, 97.5,
-                                                       axis=0)),
-                               np.nanmax(gls_obs.power)))*1.45)
+        # ax.set_ylim(0, np.max((np.nanmax(np.percentile(gls_sim_powers, 97.5,
+        #                                                axis=0)),
+        #                        np.nanmax(gls_obs.power)))*1.45)
         if panel_idx == 0:
             ax = plot_info(ax, sim_freq, label=True)
         else:
@@ -92,6 +93,8 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
             ax.plot((-d, +d), (-d, +d), **kwargs)
             ax.plot((-d, +d), (1 - d, 1 + d), **kwargs)
             ax.spines['left'].set_visible(False)
+        axes_row.append(ax)
+    return axes_row
 
 
 def plot_lines(ax, gls_obs, gls_sim_powers,
@@ -179,9 +182,9 @@ def plot_info(ax, freq, label=False):
     For a description of the parameters see 'plot_panel_row'.
 
     """
-#    if label:
-#        ax.text(0.05, 1.05, f'sim. P = {1/freq:.4f} d',
-#                transform=ax.transAxes,
-#                horizontalalignment='left', fontsize='smaller')
+    # if label:
+    #     ax.text(freq+0.2, 0.85, f'P$_\mathrm{{sim.}}$ = {1/freq:.2f} d',
+    #             transform=ax.transAxes,
+    #             horizontalalignment='left', fontsize='smaller')
     ax.axvline(freq, color='blue', linestyle='--')
     return ax
