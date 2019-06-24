@@ -50,7 +50,7 @@ class Gls:
         The light curve data either in the form of a TimeSeries object (or any
         object providing the attributes time, flux, and error) or a tuple or list
         or a filename as str providing time as first element, flux as second
-        element, and optionally, the error as third element. 
+        element, and optionally, the error as third element.
     fbeg, fend : float, optional
         The beginning and end frequencies for the periodogram
         (inverse units of time axis).
@@ -67,8 +67,8 @@ class Gls:
         If given, fast and verbose option are not available.
         If not given, a frequency array will be automatically generated.
     norm : string, optional
-        The normalization; either of "ZK", "Scargle", "HorneBaliunas", "Cumming", "wrms", "chisq".
-        The default is unity ("ZK").
+        The normalization; either of "ZK", "Scargle", "HorneBaliunas",
+        "Cumming", "wrms", "chisq". The default is unity ("ZK").
     ls : boolean, optional
         If True, the conventional Lomb-Scargle periodogram will be computed
         (default is False).
@@ -385,7 +385,7 @@ class Gls:
         the dictionary attribute `best`. Specifically, "amp" holds the
         amplitude, "fbest" the best-fit frequency, "T0" the reference time
         (i.e., time of zero phase), and "offset" holds the additive offset
-        of the sine wave. 
+        of the sine wave.
         Parameters
         ----------
         t : array

@@ -29,18 +29,21 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
         The GLS of the observed data which is plotted for comparison.
     gls_sim_powers : array, optional
         The array which contains the power information from the simulated GLS.
-    conf_intervals : array
+    conf_intervals : array, optional
         An array which contains the limits of the upper an lower confidence
         intervals which are to be grey shaded around the median of the
         simulated powers. Should be in percentages.
-    peak_pos : array
+    peak_pos : array, optional
         Array that contains the positions of the detected peaks in the GLS of
         the observed RVs.
-    obs_phases : array
+    obs_phases : array, optional
         Array containing the phase information about the detected peaks in
         the GLS of the observed RVs.
-    sim_phases : array
+    sim_phases : array, optional
         Array with the phase information for the peaks in the simulated data.
+    hide_xlabel : bool, optional
+        Whether to plot rows with spaces in between or not. If set True, there
+        are no spaces between the plot rows.
 
     """
     axes_row = []
@@ -59,8 +62,8 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
         ax = plot_phase_information(ax, peak_pos, obs_phases, sim_phases)
         if np.logical_and(hide_xlabel, plot_row == 2) or not hide_xlabel:
             if len(panel_borders) == 3:
-                ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune='upper',
-                                                       min_n_ticks=3))
+                ax.xaxis.set_major_locator(MaxNLocator(nbins=3, prune='both',
+                                                       min_n_ticks=2))
             else:
                 loc = FixedLocator(np.round([panel[0]+0.8*(panel[1]-panel[0])/3,
                                              panel[0]+2.2*(panel[1]-panel[0])/3],
@@ -119,7 +122,7 @@ def plot_lines(ax, gls_obs, gls_sim_powers,
                                      axis=0)
         ax.fill_between(freq, lower[panel_mask], upper[panel_mask],
                         facecolor='gray', alpha=alpha)
-    ax.plot(gls_obs.freq, gls_obs.power, color='red', linestyle='-')
+    ax.plot(freq, gls_obs.power[panel_mask], color='red', linestyle='-')
     return ax
 
 

@@ -278,15 +278,15 @@ if __name__ == '__main__':
         for idx, ax in enumerate(row):
             ax.set_ylim(0, ylim_max*1.45)
             if idx == 0:
-                ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune='upper',
+                ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune='both',
                                                        min_n_ticks=3))
             else:
                 ax.set_yticklabels([])
 
     plt.tight_layout()
-    save_var = os.path.join(savepath, f'{object_name}_{test_period}d'
-                            '_alias_test.pdf')
+    save_var = os.path.join(savepath, f'{object_name}_{test_period}d_'
+                            f'{sampling_freq}d_alias_test.pdf')
     plt.savefig(save_var,
-                bbox_inches='tight', dpi=400)
+                bbox_inches='tight', dpi=600)
     plt.show()
     print(f'\n \n Plot saved to {save_var}')
