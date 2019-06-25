@@ -27,6 +27,9 @@ panel_width : 0.05  # width of the plot panels around the
 
 hide_xlabel: True # If set to false, xlabels will be plotted for each row
 
+plot_additional_period_axis: True # Whether to plot a axis in units of days
+                                  # in addition on the top
+
 fbeg : 0.0001  # GLS frequency range (change to get better zoom,
                # default is good for first overview
 fend : 2.5

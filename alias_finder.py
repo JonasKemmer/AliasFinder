@@ -45,6 +45,7 @@ if __name__ == '__main__':
                       'alias_order': 1,
                       'panel_width': 1,
                       'hide_xlabel': True,
+                      'plot_additional_period_axis': True,
                       'fbeg': 0.0001,
                       'fend': 2.5,
                       'power_threshold': 0.05,
@@ -274,14 +275,23 @@ if __name__ == '__main__':
                                      sim_phases=sim_phases,
                                      hide_xlabel=hide_xlabel)
         axes.append(ax)
-    for row in axes:
-        for idx, ax in enumerate(row):
-            ax.set_ylim(0, ylim_max*1.45)
-            if idx == 0:
-                ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune='both',
-                                                       min_n_ticks=3))
-            else:
-                ax.set_yticklabels([])
+    if plot_additional_period_axis:
+        fig.text(0.5, 0.96, 'Period [d]', ha='center')
+        for panel, base_panel in zip(axes[0], axes[-1]):
+            ax2 = panel.twiny()
+            ax2.set_xticks(base_panel.get_xticks())
+            ax2.set_xticklabels(af_plots.convert_frequency_to_period(base_panel.get_xticks()))
+            ax2.set_xlim(panel.get_xlim())
+            ax2.spines['right'].set_visible(False)
+            ax2.spines['left'].set_visible(False)
+        for row in axes:
+            for idx, ax in enumerate(row):
+                ax.set_ylim(0, ylim_max*1.45)
+                if idx == 0:
+                    ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune='both',
+                                                           min_n_ticks=3))
+                else:
+                    ax.set_yticklabels([])
 
     plt.tight_layout()
     save_var = os.path.join(savepath, f'{object_name}_{test_period}d_'
