@@ -11,6 +11,7 @@ import yaml
 from matplotlib.widgets import Cursor
 from matplotlib.ticker import MaxNLocator
 from tqdm import tqdm
+from astropy.table import Table
 
 import af_calc
 import af_plots
@@ -101,9 +102,9 @@ if __name__ == '__main__':
         axins.xaxis.label.set_fontsize(4)
         axins.yaxis.label.set_fontsize(4)
         plt.tight_layout()
-        save_var = os.path.join(savepath, f'{object_name}_spectral_window_'
+        save_string = os.path.join(savepath, f'{object_name}_spectral_window_'
                                           'function.pdf')
-        plt.savefig(save_var,
+        plt.savefig(save_string,
                     bbox_inches='tight', dpi=400)
         plt.close()
         print(f'Your selected sampling frequency is {sampling_freq}')
@@ -234,6 +235,7 @@ if __name__ == '__main__':
 
     ylim_max = np.nanmax(gls_obs.power)
     axes = []
+    save_var = np.empty((len(sim_freqs), mc_samples, len(gls_obs.power)))
     for sim_freq_idx, freq in enumerate(sim_freqs):
         print(f'\n Simulating Freq. # {sim_freq_idx+1:.0f}\n')
         gls_sim_powers = np.zeros((mc_samples, len(gls_obs.power)))
@@ -275,6 +277,10 @@ if __name__ == '__main__':
                                      sim_phases=sim_phases,
                                      hide_xlabel=hide_xlabel)
         axes.append(ax)
+        save_var[idx] = gls_sim_powers
+    Table(save_var).write(os.path.join(savepath, 'simulated_GLS.fits'),
+                          overwrite=True)
+
     if plot_additional_period_axis:
         fig.text(0.5, 0.96, 'Period [d]', ha='center')
         for panel, base_panel in zip(axes[0], axes[-1]):
@@ -294,9 +300,9 @@ if __name__ == '__main__':
                     ax.set_yticklabels([])
 
     plt.tight_layout()
-    save_var = os.path.join(savepath, f'{object_name}_{test_period}d_'
+    save_string = os.path.join(savepath, f'{object_name}_{test_period}d_'
                             f'{sampling_freq}d_alias_test.pdf')
-    plt.savefig(save_var,
+    plt.savefig(save_string,
                 bbox_inches='tight', dpi=600)
     plt.show()
-    print(f'\n \n Plot saved to {save_var}')
+    print(f'\n \n Plot saved to {save_string}')

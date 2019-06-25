@@ -195,4 +195,4 @@ def plot_info(ax, freq, label=False):
 
 def convert_frequency_to_period(X):
     """ Conversion function for the optional period axis. """
-   return ["%.2f" % (1/z) for z in X]
+    return ["%.2f" % (1/z) for z in X]
