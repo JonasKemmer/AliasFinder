@@ -26,17 +26,18 @@ where the file "params.yaml" contains the parameters with which the script is ex
 
 ```yaml
 # Input file to define the parameters for the script.
-object_name : 'Object_Name'  # Name of the object, must be a python starting
+object_name : 'Object_Name'  # Name of the object, must be a python string
                        # (used by the GLS Script and to create the outputs)
 
 savepath : './' # Path were the plots will be saved
 
-rv_files : ['path_to_rvs'] # Path to the file(s) that contains the RV data.
-                                  # First column must be the times, second the RV and third the RV errors
+rv_files : ['path_to_rvs']  # List of path(s) to the files that contain the RV data.
+                            # First column of each file must be the times, second
+                            # the RV and third the RV errors
 
 offsets : [0] # If several RV datasets are given, these define the offsets between them
 
-test_period : 1  # The Period which you think is the true Period of the planet given in [days]
+test_period : 1  # The period which you think is the true period of the planet given in [days]
 
 sampling_freq : None # If default(=None), the sampling frequency can be chosen from the plot of the window function.
                      # Otherwise a frequency [1/day] must be given.
@@ -44,7 +45,7 @@ sampling_freq : None # If default(=None), the sampling frequency can be chosen f
 mc_samples : 1000 # Number of MC samples to perform. 1000 is a good number.
 
 num_processes : 1 # Number of processes used when sampling the simulated GLS.
-                   # If num_processes > 1, multiprocessing will be used.
+                   # If num_processes > 1 multiprocessing will be used.
 
 alias_order : 1 # alias frequencies are found at f_alias : f_test +/- m * f_sampling
                 # Define up to which order of m the panels should be plotted (1 or 2)
@@ -54,9 +55,11 @@ panel_width : 0.006  # width of the plot panels around the
 
 hide_xlabel: True # If set to false, xlabels will be plotted for each row
 
-fbeg : 0.0001  # GLS frequency range (change to get better zoom,
-               # default is good for first overview
-fend : 2.5
+plot_additional_period_axis: True # Optional period axis on top of plot.
+
+fbeg : 0.0001  # GLS frequency range, has no impact on the plots, but is used
+fend : 2.5     # to calculate the GLS. Can be made narrower to speed up the
+               # calculations
 
 power_threshold : 0.06 # power threshold (ZK normalization) to find peaks
                        # in the periodograms
@@ -64,9 +67,9 @@ power_threshold : 0.06 # power threshold (ZK normalization) to find peaks
 search_phase_range : 0.00005 # frequency range to search for new maxima in
                              # simulated data bases on real data GLS peaks
 
-substract : False  # Whether to remove a sinusoidal signal from the data beforehand
-                   # using sinus function 1: Subtract most significant period,
-                   #                      2: Subtract second most significant period
+substract : False  # Can be used to remove a sinusoidal signal from the data beforehand
+                   # 1: Subtract most significant period,
+                   # 2: Subtract also second most significant period
 
 use_rms_as_jitter : True  # Use rms of the Rvs as jitter
 jitter : 0                # Can be used to insert the jitter of a planet fit in simulated data

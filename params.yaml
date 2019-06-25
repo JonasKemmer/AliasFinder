@@ -39,9 +39,9 @@ power_threshold : 0.06 # power threshold (ZK normalization) to find peaks
 search_phase_range : 0.00005 # frequency range to search for new maxima in
                              # simulated data bases on real data GLS peaks
 
-substract : False  # Whether to remove a sinusoidal signal from the data beforehand
-                   # using sinus function 1: Subtract most significant period,
-                   #                      2: Subtract second most significant period
+substract : False  # Can be used to remove a sinusoidal signal from the data beforehand
+                   # 1: Subtract most significant period,
+                   # 2: Subtract also second most significant period
 
 use_rms_as_jitter : True  # Use rms of the Rvs as jitter
 jitter : 0                # Can be used to insert the jitter of a planet fit in simulated data
