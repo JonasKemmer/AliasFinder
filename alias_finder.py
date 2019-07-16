@@ -82,7 +82,7 @@ if __name__ == '__main__':
                   '(Press any button then click)')
         plt.xlabel('Frequency f [1/d]')
         plt.ylabel(r'Power W($\nu$)')
-        ax.plot(window_freqs, window_powers, color='black')
+        main_line = ax.plot(window_freqs, window_powers, color='black')
         cursor = Cursor(ax, useblit=True, color='k', linewidth=1)
         zoom_ok = False
         print('\nZoom or pan to view, \npress any button when ready'
@@ -95,12 +95,13 @@ if __name__ == '__main__':
         plt.autoscale()
         plt.xlim(0, 1.2)
         plt.title('')
-        fig.set_size_inches(3.5, 3, forward=True)
+        fig.set_size_inches(3.5, 2, forward=True)
         axins = ax.inset_axes([0.2, 0.53, 0.4, 0.4])
-        axins.plot(window_freqs, window_powers, color='black')
+        axins.plot(window_freqs, window_powers, color='black', linewidth=0.6)
         axins.set_xlim(0.99, 1.01)
-        axins.xaxis.label.set_fontsize(4)
-        axins.yaxis.label.set_fontsize(4)
+        plt.setp(main_line, linewidth=0.6)
+        axins.xaxis.label.set_fontsize(2)
+        axins.yaxis.label.set_fontsize(2)
         plt.tight_layout()
         save_string = os.path.join(savepath, f'{object_name}_spectral_window_'
                                           'function.pdf')

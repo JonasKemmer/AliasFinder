@@ -4,8 +4,9 @@ object_name : 'GJ436'  # Name of the object, must be a python starting
 
 savepath : './' # Path were the plots will be saved
 
-rv_files : ['./GJ436.vels'] # Path to the file(s) that contains the RV data.
-                                  # First column must be the times, second the RV and third the RV errors
+rv_files : ['./GJ436.vels'] # List of path(s) to the files that contain the RV data.
+                            # First column of each file must be the times, second
+                            # the RV and third the RV errors
 
 offsets : [0] # If several RV datasets are given, these define the offsets between them
 
@@ -30,9 +31,9 @@ hide_xlabel: True # If set to false, xlabels will be plotted for each row
 plot_additional_period_axis: True # Whether to plot a axis in units of days
                                   # in addition on the top
 
-fbeg : 0.0001  # GLS frequency range (change to get better zoom,
-               # default is good for first overview
-fend : 2.5
+fbeg : 0.0001  # GLS frequency range, has no impact on the plots, but is used 
+fend : 2.5     # to calculate the GLS. Can be made narrower to speed up the
+               # calculations
 
 power_threshold : 0.6 # power threshold (ZK normalization) to find peaks
                        # in the periodograms
@@ -40,9 +41,9 @@ power_threshold : 0.6 # power threshold (ZK normalization) to find peaks
 search_phase_range : 0.00005 # frequency range to search for new maxima in
                              # simulated data bases on real data GLS peaks
 
-substract : False  # Whether to remove a sinusoidal signal from the data beforehand
-                   # using sinus function 1: Subtract most significant period,
-                   #                      2: Subtract second most significant period
+substract : False  # Can be used to remove a sinusoidal signal from the data beforehand
+                   # 1: Subtract most significant period,
+                   # 2: Subtract also second most significant period
 
 use_rms_as_jitter : True  # Use rms of the Rvs as jitter
 jitter : 0                # Can be used to insert the jitter of a planet fit in simulated data
