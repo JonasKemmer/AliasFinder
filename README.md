@@ -1,10 +1,10 @@
-# The Alias Finder
+# The AliasFinder
 
-The Alias Finder is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
+The AliasFinder is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
 The original method is coupled with a Monte-Carlo approach to evaluate also the impact of noise on the data.
 
 ## Requirements
-The Alias Finder is written in Python 3 and should run with a standard [Anaconda distribution](https://www.anaconda.com/distribution/). The requirements are:
+The AliasFinder is written in Python 3 and should run with a standard [Anaconda distribution](https://www.anaconda.com/distribution/). The requirements are:
 * numpy
 * matplotlib
 * SciPy
@@ -18,7 +18,7 @@ All additional needed scripts are provided with the package. In particular these
 * The detect_peaks script https://github.com/demotu/BMC/tree/master/functions
 
 ## Usage and Explanation
-The Alias Finder is executed with:
+The AliasFinder is executed with:
 ```bash
 python alias_finder.py params.yaml
 ```
@@ -77,7 +77,7 @@ jitter : 0                # Can be used to insert the jitter of a planet fit in 
 The most important parameter is the "test_period" (given in days) which is the period you think is the true period.
 If no sampling frequency is specified in the input file, the window function ([Roberts et al., 1987](https://ui.adsabs.harvard.edu/abs/1987AJ.....93..968R/abstract)) of the data will be plotted. From that you can select a sampling frequency for whose aliases you want to test.
 
-When the test frequency and the sampling frequency are set, the script automatically calculates the theoretically occurring first order aliases and searches for peaks at those frequencies in the real data. Only peaks that are above the threshold given in the input file are taken into the account in doing so. The Alias finder displays the frequency of the theoretical peak and the closest found peak in the terminal and you are than asked to select whether they match or not.
+When the test frequency and the sampling frequency are set, the script automatically calculates the theoretically occurring first order aliases and searches for peaks at those frequencies in the real data. Only peaks that are above the threshold given in the input file are taken into the account in doing so. The AliasFinder displays the frequency of the theoretical peak and the closest found peak in the terminal and you are than asked to select whether they match or not.
 
 After all frequencies are selected, a number of synthetic datasets (given as "n_samples" in the input file) and the corresponding GLS periodograms will be calculated for each of them. When it is finished, the final plot shows the results of the simulations compared to the real observed data.
 
@@ -103,7 +103,7 @@ python ../alias_finder.py GJ436.yaml
 ```
 Output:
 ```
-Welcome to the Alias Finder V1.0.
+Welcome to the AliasFinder V1.0.
 
 Please select the sampling frequency you want to test from the plot
 
