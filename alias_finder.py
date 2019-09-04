@@ -280,9 +280,9 @@ if __name__ == '__main__':
                                      sim_phases=sim_phases,
                                      hide_xlabel=hide_xlabel)
         axes.append(ax)
-        save_var[idx] = gls_sim_powers
-    Table(save_var).write(os.path.join(savepath, 'simulated_GLS.fits'),
-                          overwrite=True)
+    #     save_var[idx] = gls_sim_powers
+    # Table(save_var).write(os.path.join(savepath, 'simulated_GLS.fits'),
+    #                       overwrite=True)
 
     if plot_additional_period_axis:
         fig.text(0.5, 0.96, 'Period [d]', ha='center')
