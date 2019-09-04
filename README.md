@@ -85,7 +85,7 @@ After all frequencies are selected, a number of synthetic datasets (given as "n_
 ## Description of the plots
 
 The solid black line is the median GLS of the simulations, while in red, the observed one is shown.
-Grey shades mark the upper and lower 25%, 10% and 2.5% percentiles **(CHECK)** of the simulations.
+Grey shades mark the interquartile range and the confidencde range of 90% and 99% of the simulations.
 Additionally, clock diagrams show the phase of all peaks above the threshold within the range of the subsets in the plots. In the case of the simulated data, the circular mean is plotted in black and the circular standard deviation in gray.
 For each row, the injected test frequency is highlighted by a blue dashed line.
 
