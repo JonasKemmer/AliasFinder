@@ -8,7 +8,7 @@ tags:
   - signal search
 authors:
   - name: Stephan Stock
-    orcid: 0000-0003-0872-7098
+    orcid: 0000-0002-1166-9338
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
   - name: Jonas Kemmer
     affiliation: "1, 2"
