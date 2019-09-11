@@ -11,7 +11,6 @@ authors:
     orcid: 0000-0003-0872-7098
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
   - name: Jonas Kemmer
-    orcid: 0000-0000-0000-0000
     affiliation: "1, 2"
 affiliations:
  - name: Landessternwarte, Zentrum für Astronomie der Universität Heidelberg, Königstuhl 12, 69117 Heidelberg, Germany 
