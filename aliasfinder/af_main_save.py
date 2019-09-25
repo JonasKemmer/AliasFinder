@@ -13,19 +13,20 @@ from matplotlib.ticker import MaxNLocator
 from tqdm import tqdm
 from astropy.table import Table
 
-import af_calc
-import af_plots
-import af_utils
+import aliasfinder.af_calc as af_calc
+import aliasfinder.af_plots as af_plots
+import aliasfinder.af_utils as af_utils
 
 
 __author__ = "Jonas Kemmer, Stephan Stock @ ZAH, Landessternwarte Heidelberg"
-__version__ = "1.0."
+__version__ = "1.0"
 __license__ = "MIT"
 
 
 warnings.filterwarnings("ignore")
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def main():
     print(f' \n'
           f'Welcome to the Alias Finder V{__version__}\n')
     # Input the parameter set in the parameter file - the list of possible
@@ -35,7 +36,6 @@ if __name__ == '__main__':
             input_params = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc)
-
     default_params = {'object_name': '',
                       'savepath': './',
                       'rv_files': [],
@@ -55,15 +55,14 @@ if __name__ == '__main__':
                       'substract': False,
                       'use_rms_as_jitter': True,
                       'jitter': 0}
-
+    params = {}
     for key in default_params:
         try:
-            locals().update({key: input_params[key]})
+            params = {key: input_params[key]}
         except KeyError:
-            locals().update({key: default_params[key]})
+            params = {key: default_params[key]})
             print(f'Parameter {key} is missing in the input file.\n'
                   f'Value set to default: {key} = {default_params[key]}\n')
-
     # Read in the observed RV data
     times, rvs, rvs_err = af_utils.read_rvs(rv_files, offsets)
     if sampling_freq is None or sampling_freq == 'None':
@@ -309,3 +308,6 @@ if __name__ == '__main__':
                 bbox_inches='tight', dpi=600)
     plt.show()
     print(f'\n \n Plot saved to {save_string}')
+
+if __name__ == "__main__":
+    main()

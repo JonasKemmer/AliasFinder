@@ -1,6 +1,6 @@
 import numpy as np
 
-import af_gls
+import aliasfinder.af_gls as af_gls
 
 
 def find_nearest_frequency(array, value):

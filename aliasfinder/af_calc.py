@@ -1,8 +1,7 @@
 import numpy as np
 
-import af_calc
-import af_utils
-from detect_peaks import detect_peaks
+import aliasfinder.af_utils as af_utils
+from aliasfinder.detect_peaks import detect_peaks
 
 
 def get_phase_info(gls_obj, power_threshold=None, sim=False,
@@ -118,7 +117,7 @@ def sample_gls(times, gls_obs, freq, jitter, rvs_err, fbeg, fend, object_name,
 
     """
     rvs_sim = np.ones(np.shape(times)) \
-              + af_calc.sim_any_sinmode(gls_obs, freq, times) \
+              + sim_any_sinmode(gls_obs, freq, times) \
               + np.random.normal(0, np.sqrt(jitter**2), times.size)
     ls_sim = af_utils.get_gls(times, rvs_sim, rvs_err, fbeg, fend, object_name,
                               freq_array=gls_obs.freq)
@@ -136,7 +135,7 @@ def sample_gls(times, gls_obs, freq, jitter, rvs_err, fbeg, fend, object_name,
                                     ls_sim.freq[index_frequencies][index_maxfreqs])[0]
 
         dummy_freq_array[j] = ls_sim.freq[index_maxfreq]
-    peaks_sim = af_calc.get_phase_info(ls_sim,
+    peaks_sim = get_phase_info(ls_sim,
                                        frequency_array=dummy_freq_array,
                                        sim=True)
     return ls_sim.power, ls_sim.freq, (peaks_sim[2] % 1) * 2. * np.pi
