@@ -3,8 +3,22 @@
 The AliasFinder is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
 The original method is coupled with a Monte-Carlo approach to evaluate also the impact of noise on the data.
 
+## Installation
+Directly from github using [pip](https://pip.pypa.io) and [git](https://git-scm.com):
+```bash
+pip install git+https://github.com/JonasKemmer/AliasFinder.git
+```
+Or download the directory to a local path:
+```bash
+git clone https://github.com/JonasKemmer/AliasFinder.git
+cd AliasFinder
+pip install .
+```
+
+
 ## Requirements
 The AliasFinder is written in Python 3 and should run with a standard [Anaconda distribution](https://www.anaconda.com/distribution/). The requirements are:
+* astropy
 * numpy
 * matplotlib
 * SciPy
@@ -20,7 +34,7 @@ All additional needed scripts are provided with the package. In particular these
 ## Usage and Explanation
 The AliasFinder is executed with:
 ```bash
-python alias_finder.py params.yaml
+AliasFinder params.yaml
 ```
 where the file "params.yaml" contains the parameters with which the script is executed. All possible options are listed and explained in the example file:
 
@@ -97,9 +111,9 @@ One can thereby chose to plot only to the first order or up to the second order 
 ## Example
 Testing the two peaks of P<sub>1</sub> ~2.64 d and P<sub>2</sub> ~ 1.60 d shown in [Trifonov et al. (2018)](https://ui.adsabs.harvard.edu/abs/2018A%26A...609A.117T/abstract).
 
-Executing the script in a terminal:
+Executing the script from the Example folder in a terminal:
 ```bash
-python ../alias_finder.py GJ436.yaml
+AliasFinder GJ436.yaml
 ```
 Output:
 ```
