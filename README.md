@@ -1,25 +1,26 @@
-# The AliasFinder
+# The *AliasFinder*
 
-The AliasFinder is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
+The *AliasFinder* is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
 The original method is coupled with a Monte-Carlo approach to evaluate also the impact of noise on the data.
 
 ## Installation
 ### Using pip
-Directly from github using [pip](https://pip.pypa.io) and [git](https://git-scm.com):
+Downloads and installs the newest version from github using [pip](https://pip.pypa.io) and [git](https://git-scm.com):
 ```bash
 pip install git+https://github.com/JonasKemmer/AliasFinder.git
 ```
 ### From source
-Or download the directory to a local path:
+If you want to download the directory to a local path:
 ```bash
 git clone https://github.com/JonasKemmer/AliasFinder.git
 cd AliasFinder
 python setup.py install
 ```
+Alternatively you can use `python setup.py develop` to create a special .egg-link file in the download directory. In this way, any changes to the source code will directly be taken into account when the package is called (usefull if you plan to implement your own changes to the code).
 
 
 ## Requirements
-The AliasFinder is written in Python 3 and should run with a standard [Anaconda distribution](https://www.anaconda.com/distribution/). The requirements are:
+The *AliasFinder* is written in Python 3 and should run with a standard [Anaconda distribution](https://www.anaconda.com/distribution/). The requirements are:
 * astropy
 * numpy
 * matplotlib
@@ -34,11 +35,11 @@ All additional needed scripts are provided with the package. In particular these
 * The detect_peaks script https://github.com/demotu/BMC/tree/master/functions
 
 ## Usage and Explanation
-The AliasFinder is executed with:
+The *AliasFinder* can be executed from everywhere with:
 ```bash
 AliasFinder params.yaml
 ```
-where the file "params.yaml" contains the parameters with which the script is executed. All possible options are listed and explained in the example file:
+where "params.yaml" is the path to a file in the "yaml"-format that contains the parameters with which the script is to be executed. All possible options are listed and explained in the example file:
 
 ```yaml
 # Input file to define the parameters for the script.
@@ -93,7 +94,7 @@ jitter : 0                # Can be used to insert the jitter of a planet fit in 
 The most important parameter is the "test_period" (given in days) which is the period you think is the true period.
 If no sampling frequency is specified in the input file, the window function ([Roberts et al., 1987](https://ui.adsabs.harvard.edu/abs/1987AJ.....93..968R/abstract)) of the data will be plotted. From that you can select a sampling frequency for whose aliases you want to test.
 
-When the test frequency and the sampling frequency are set, the script automatically calculates the theoretically occurring first order aliases and searches for peaks at those frequencies in the real data. Only peaks that are above the threshold given in the input file are taken into the account in doing so. The AliasFinder displays the frequency of the theoretical peak and the closest found peak in the terminal and you are than asked to select whether they match or not.
+When the test frequency and the sampling frequency are set, the script automatically calculates the theoretically occurring first order aliases and searches for peaks at those frequencies in the real data. Only peaks that are above the threshold given in the input file are taken into the account in doing so. The *AliasFinder* displays the frequency of the theoretical peak and the closest found peak in the terminal and you are than asked to select whether they match or not.
 
 After all frequencies are selected, a number of synthetic datasets (given as "n_samples" in the input file) and the corresponding GLS periodograms will be calculated for each of them. When it is finished, the final plot shows the results of the simulations compared to the real observed data.
 
@@ -101,7 +102,7 @@ After all frequencies are selected, a number of synthetic datasets (given as "n_
 ## Description of the plots
 
 The solid black line is the median GLS of the simulations, while in red, the observed one is shown.
-Grey shades mark the interquartile range and the confidencde range of 90% and 99% of the simulations.
+Grey shades mark the interquartile range and the confidence range of 90% and 99% of the simulations.
 Additionally, clock diagrams show the phase of all peaks above the threshold within the range of the subsets in the plots. In the case of the simulated data, the circular mean is plotted in black and the circular standard deviation in gray.
 For each row, the injected test frequency is highlighted by a blue dashed line.
 
