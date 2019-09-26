@@ -19,7 +19,7 @@ setup(
    author_email='jkemmer@lsw.uni-heidelberg.de',
    url="https://github.com/JonasKemmer/AliasFinder",
    packages=setuptools.find_packages(),
-   install_requires=['astropy', 'numpy', 'matplotlib',
+   install_requires=['astropy', 'numpy', 'matplotlib >= 3.1.1',
                      'scipy',
                      'pyyaml', 'tqdm'],
    python_requires='>=3.6',
