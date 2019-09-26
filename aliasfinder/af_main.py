@@ -28,7 +28,7 @@ warnings.filterwarnings("ignore")
 
 def main():
     print(f' \n'
-          f'Welcome to the Alias Finder V{__version__}\n')
+          f'Welcome to the AliasFinder V{__version__}\n')
     # Input the parameter set in the parameter file - the list of possible
     # arguments is defined in the default_params-dictionairy
     with open(str(sys.argv[1])) as stream:
