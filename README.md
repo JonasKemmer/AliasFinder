@@ -4,15 +4,17 @@ The AliasFinder is a Python script for uncomplicated alias testing based on the 
 The original method is coupled with a Monte-Carlo approach to evaluate also the impact of noise on the data.
 
 ## Installation
+### Using pip
 Directly from github using [pip](https://pip.pypa.io) and [git](https://git-scm.com):
 ```bash
 pip install git+https://github.com/JonasKemmer/AliasFinder.git
 ```
+### From source
 Or download the directory to a local path:
 ```bash
 git clone https://github.com/JonasKemmer/AliasFinder.git
 cd AliasFinder
-pip install .
+python setup.py install
 ```
 
 
