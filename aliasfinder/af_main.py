@@ -80,39 +80,44 @@ def main():
         ax = fig.add_subplot(1, 1, 1)
         plt.title('Spectral window function of the data\n'
                   'Please select the sampling frequency you want to test '
-                  '(Press any button then click)')
+                  '(Double click left mouse button)')
         plt.xlabel('Frequency f [1/d]')
         plt.ylabel(r'Power W($\nu$)')
         main_line = ax.plot(window_freqs, window_powers, color='black')
         cursor = Cursor(ax, useblit=True, color='k', linewidth=1)
-        zoom_ok = False
-        print('\nZoom or pan to view, \npress any button when ready'
-              ' to select the sampling frequency - then click:\n')
-        while not zoom_ok:
-            zoom_ok = plt.waitforbuttonpress()
-        params['sampling_freq'] = plt.ginput(1)
-        params['sampling_freq'] = np.round(params['sampling_freq'][0][0], 5)
-        plt.axis('auto')
-        plt.autoscale()
-        plt.xlim(0, 1.2)
-        plt.title('')
-        fig.set_size_inches(3.5, 3, forward=True)
-        axins = ax.inset_axes([0.2, 0.53, 0.4, 0.4])
-        axins.plot(window_freqs, window_powers, color='black', linewidth=0.6)
-        axins.set_xlim(0.99, 1.01)
-        plt.setp(main_line, linewidth=0.6)
-        ax.xaxis.label.set_fontsize(8)
-        ax.yaxis.label.set_fontsize(8)
-        axins.tick_params(labelsize=8)
-        ax.tick_params(labelsize=8)
-        plt.tight_layout()
-        save_string = os.path.join(params['savepath'],
-                                   params['object_name']+'_spectral_window_'
-                                   'function.pdf')
-        plt.savefig(save_string,
-                    bbox_inches='tight', dpi=400)
-        plt.close()
-        print('Your selected sampling frequency is {}'
+
+        def onclick(event):
+            if event.button == 1 and event.dblclick:
+                params['sampling_freq'] = np.round(event.xdata, 5)
+                plt.axis('auto')
+                plt.autoscale()
+                plt.xlim(0, 1.2)
+                plt.title('')
+                fig.set_size_inches(3.5, 3, forward=True)
+                axins = ax.inset_axes([0.2, 0.53, 0.4, 0.4])
+                axins.plot(window_freqs, window_powers, color='black',
+                           linewidth=0.6)
+                axins.set_xlim(0.99, 1.01)
+                plt.setp(main_line, linewidth=0.6)
+                ax.xaxis.label.set_fontsize(8)
+                ax.yaxis.label.set_fontsize(8)
+                axins.tick_params(labelsize=8)
+                ax.tick_params(labelsize=8)
+                plt.tight_layout()
+                save_string = os.path.join(params['savepath'],
+                                           params['object_name']+'_spectral_window_'
+                                           'function.pdf')
+                plt.savefig(save_string,
+                            bbox_inches='tight', dpi=400)
+                plt.close()
+
+        cid = fig.canvas.mpl_connect('button_press_event', onclick)
+        plt.show()
+
+        if params['sampling_freq'] is None or params['sampling_freq'] == 'None':
+            raise Exception('Plot closed before sampling frequency was '
+                            'choosen')
+        print('Your selected sampling frequency is '
               + str(params['sampling_freq']))
     else:
         print('Sampling frequency (f = '+str(params['sampling_freq'])
