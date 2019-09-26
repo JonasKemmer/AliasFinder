@@ -300,15 +300,20 @@ def main():
             ax2.set_xlim(panel.get_xlim())
             ax2.spines['right'].set_visible(False)
             ax2.spines['left'].set_visible(False)
-        for row in axes:
-            for idx, ax in enumerate(row):
-                ax.set_ylim(0, ylim_max*1.45)
-                if idx == 0:
-                    ax.yaxis.set_major_locator(MaxNLocator(nbins=3,
-                                                           prune='both',
-                                                           min_n_ticks=3))
-                else:
-                    ax.set_yticklabels([])
+            ax2.set_yticks([])
+            ax2.tick_params(labelright='off')
+    for row in axes:
+        for idx, ax in enumerate(row):
+            ax.set_ylim(0, ylim_max*1.45)
+            if idx == 0:
+                ax.yaxis.set_major_locator(MaxNLocator(nbins=3,
+                                                       prune='both',
+                                                       min_n_ticks=3))
+                ax.yaxis.set_label_position("left")
+                ax.yaxis.tick_left()
+            else:
+                ax.set_yticks([])
+                ax.tick_params(labelleft='off')
 
     plt.tight_layout()
     save_string = os.path.join(params['savepath'], params['object_name']
