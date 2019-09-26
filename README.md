@@ -123,9 +123,6 @@ Output:
 Welcome to the AliasFinder V1.0.
 
 Please select the sampling frequency you want to test from the plot
-
-Zoom or pan to view,
-press any button when ready to select the sampling frequency - then click:
 ```
 
 ![Picture of the Window Function](./Example/window_function_plot.png "Window_Function")
