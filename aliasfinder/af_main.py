@@ -225,7 +225,8 @@ def main():
         raise Exception('Orders higher than m=2 are not implemented.')
 
     # Initializing the plot and starting the simulations
-    fig = plt.figure(figsize=(7, 4))
+    fig = plt.figure(figsize=(7.3, 3.1))
+    plt.rcParams.update({'lines.linewidth':1})
     if params['alias_order'] == 1:
         gs = gridspec.GridSpec(3, 3)
     else:
@@ -236,11 +237,11 @@ def main():
     else:
         gs.update(wspace=0.08, hspace=0.25)
 
-    matplotlib.rc('xtick', labelsize=9)
-    matplotlib.rc('ytick', labelsize=9)
-    fig.text(0.5, 0.02, 'Frequency f [1/d]', ha='center')
+    matplotlib.rc('xtick', labelsize=6)
+    matplotlib.rc('ytick', labelsize=6)
+    fig.text(0.5, 0.01, 'Frequency f [1/d]', ha='center', fontsize=8)
     fig.text(0.05, 0.5, gls_obs.label["ylabel"], va='center',
-             rotation='vertical')
+             rotation='vertical', fontsize=8)
 
     if params['use_rms_as_jitter']:
         params['jitter'] = gls_obs.rms
@@ -297,7 +298,7 @@ def main():
     #                       overwrite=True)
 
     if params['plot_additional_period_axis']:
-        fig.text(0.5, 0.96, 'Period [d]', ha='center')
+        fig.text(0.5, 0.96, 'Period [d]', ha='center', fontsize=8)
         for panel, base_panel in zip(axes[0], axes[-1]):
             ax2 = panel.twiny()
             ax2.set_xticks(base_panel.get_xticks())
@@ -322,8 +323,8 @@ def main():
 
     plt.tight_layout()
     save_string = os.path.join(params['savepath'], params['object_name']
-                               + '_'+str(params['test_period'])+'d_'
-                               + str(params['sampling_freq'])
+                               + '_'+str(params['test_period']).replace('.', 'p')+'d_'
+                               + str(params['sampling_freq']).replace('.', 'p')
                                + 'd_alias_test.pdf')
     plt.savefig(save_string,
                 bbox_inches='tight', dpi=600)
