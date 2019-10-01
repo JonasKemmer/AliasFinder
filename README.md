@@ -30,9 +30,9 @@ The *AliasFinder* is written in Python 3 and should run with a standard [Anacond
 * [tqdm](https://github.com/tqdm/tqdm)
 
 
-All additional needed scripts are provided with the package. In particular these are:
-* The GLS script https://github.com/mzechmeister/GLS
-* The detect_peaks script https://github.com/demotu/BMC/tree/master/functions
+Additionally we use generalized Lomb-Scargle periodograms (see [Zechmeister & Kürster 2009](https://www.aanda.org/component/article?access=bibcode&bibcode=&bibcode=2009A%2526A...496..577ZFUL)). The script is provided with the package, but you can find the repository of the project here:
+* https://github.com/mzechmeister/GLS
+
 
 ## Usage and Explanation
 The *AliasFinder* can be executed from everywhere with:
