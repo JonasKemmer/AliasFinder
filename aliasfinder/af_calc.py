@@ -1,7 +1,7 @@
 import numpy as np
+from scipy.signal import find_peaks
 
 import aliasfinder.af_utils as af_utils
-from aliasfinder.detect_peaks import detect_peaks
 
 
 def get_phase_info(gls_obj, power_threshold=None, sim=False,
@@ -34,7 +34,7 @@ def get_phase_info(gls_obj, power_threshold=None, sim=False,
     if sim:
         indexes = np.searchsorted(gls_obj.freq, frequency_array)
     else:
-        indexes = detect_peaks(gls_obj.p, mph=power_threshold)
+        indexes, _ = find_peaks(gls_obj.p, height=power_threshold)
     phases = np.zeros(len(indexes))
     freqs = np.zeros(len(indexes))
     powers = np.zeros(len(indexes))
