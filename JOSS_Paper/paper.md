@@ -34,9 +34,9 @@ The detection of exoplanets by this method relies
 on finding periodic signals in noisy time-series data (RVs over time) using a periodogram analysis.
 However, gaps in the observations (e.g. stars can only be observed during night from the ground)
 can result into strong aliases, an effect where two signals are almost indistinguishable when sampled. Aliases
-normally occure at $f_{\text{Alias}}=f_{\text{True}}\pm m \cdot f_{\text{Sampling}}$ where $f_{\text{True}}$
+normally occur at $f_{\text{Alias}}=f_{\text{True}}\pm m \cdot f_{\text{Sampling}}$ where $f_{\text{True}}$
 is the true signal, $f_{\text{Sampling}}$ the sampling frequency and $m$ an integer value.
-This makes it difficult to asses the true period of the planet and has already led to incorrectly published
+This makes it difficult to assess the true period of the planet and has already led to incorrectly published
 orbital periods (see Dawson and Fabrcky 2010; Stock et al. in prep).
 
 ``AliasFinder`` is a Python script which can help to identify the true signal within a time series data.
