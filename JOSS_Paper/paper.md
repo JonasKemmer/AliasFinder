@@ -69,6 +69,6 @@ are shown in the clock diagram (red: simulated; grey: data).](example2.png)
 # Acknowledgements]
 
 We acknowledge contributions from Paul Heeren, and support from Sabine Reffert,
-and Trifon Trifonov during the genesis of this project. **We made us of NumPy [@oliphant2006guide]. This research made use of Astropy [@Astropy_comm] a community-developed core Python package for Astronomy [@Astropy2018]. We made use of tqdm [@tqdm], SciPy @[Scipy2019] and matplotlib [@Hunter2007].**
+and Trifon Trifonov during the genesis of this project. **We made us of NumPy [@oliphant2006guide]. This research made use of Astropy [@Astropy_comm] a community-developed core Python package for Astronomy [@Astropy2018]. We made use of tqdm [@tqdm], SciPy [@Scipy2019] and matplotlib [@Hunter2007].**
 
 # References
