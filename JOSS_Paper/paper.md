@@ -39,9 +39,9 @@ is the true signal, $f_{\text{Sampling}}$ the sampling frequency and $m$ an inte
 This makes it difficult to asses the true period of the planet and has already led to incorrectly published
 orbital periods (see Dawson and Fabrcky 2010; Stock et al. in prep).
 
-``AliasFinder`` is a Python script which can help to identify the true signal within a time series data.
+``AliasFinder`` is a Python script which can help to identify the true signal within a time series data. 
 The script is based on a method described in @Dawson2010, however ``AliasFinder`` uses some improvements described
-in detail within Stock et al.(in prep.). The basic principle is to simulate an ensemble of noisy time-series based on the
+in detail within Stock et al.(in prep.). **To our knowledge, there are no other public packages to perform alias testing based on this methodology.** The basic principle is to simulate an ensemble of noisy time-series based on the
 original data sampling and noise level and inject one of the signals observed within the original data into this time-series.
  ``AliasFinder`` will than plot the median GLS periodogram [@Zechmeister2009] from the simulations of the injected
 signal overplotted with the original data periodogram. From the comparison of the signal properties (signal power,
@@ -66,9 +66,9 @@ The two lower panels show the simulated median periodogram where the first order
 The angular mean of the phase of each peak and its standard deviation
 are shown in the clock diagram (red: simulated; grey: data).](example2.png)
 
-# Acknowledgements
+# Acknowledgements]
 
 We acknowledge contributions from Paul Heeren, and support from Sabine Reffert,
-and Trifon Trifonov during the genesis of this project.
+and Trifon Trifonov during the genesis of this project. **We made us of NumPy [@oliphant2006guide]. This research made use of Astropy [@Astropy_comm] a community-developed core Python package for Astronomy [@Astropy2018]. We made use of tqdm [@tqdm], SciPy @[Scipy2019] and matplotlib [@Hunter2007].**
 
 # References
