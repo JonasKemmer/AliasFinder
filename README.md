@@ -18,6 +18,12 @@ python setup.py install
 ```
 Alternatively you can use `python setup.py develop` to create a special .egg-link file in the download directory. In this way, any changes to the source code will directly be taken into account when the package is called (usefull if you plan to implement your own changes to the code).
 
+### Testing the installation
+To test the functionality of the AliasFinder you can run the example from the folder. If you used pip-install, you can download the example data and the corresponding parameter-file [here](https://github.com/JonasKemmer/AliasFinder/raw/master/Example/GJ436.vels) and [here](https://github.com/JonasKemmer/AliasFinder/raw/master/Example/GJ436.yaml). Go to the download folder and run:
+```bash
+AliasFinder GJ436.yaml
+```
+Proceed through the program. If the final result plot is produced and looks similar to the example below, everything should be fine.
 
 ## Requirements
 The *AliasFinder* is written in Python 3 and should run with a standard [Anaconda distribution](https://www.anaconda.com/distribution/). The requirements are:
