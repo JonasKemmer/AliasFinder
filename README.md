@@ -1,4 +1,8 @@
 # The *AliasFinder*
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)   [![status](https://joss.theoj.org/papers/aafabd6b2c8558da7608930332f927e3/status.svg)](https://joss.theoj.org/papers/aafabd6b2c8558da7608930332f927e3)
+
+
+
 
 The *AliasFinder* is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
 The original method is coupled with a Monte-Carlo approach to evaluate also the impact of noise on the data.
