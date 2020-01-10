@@ -25,15 +25,15 @@ bibliography: paper_alias.bib
 # Summary
 
 Planets around other stars, so called exoplanets, can be detected with the radial
-velocity (RV) method which uses high-resolution spectroscopy on the host star. The method transforms the
-measured Doppler-shift in a stellar spectrum to a radial velocity.
+velocity (RV) method, which uses high-resolution spectroscopy on the host star. The method transforms the
+measured Doppler-shift into a stellar spectrum to a radial velocity.
 This Doppler-shift is caused by the stellar reflex motion (wobbling),
 in particular the line of sight movement of the star, due to its gravitational interaction with the orbiting planet.
-By now the RV method is the second most successful method and the first one to find exoplanets.
+The RV method was the first to find exoplanets and is still the second most successful method for finding new planets.
 The detection of exoplanets by this method relies
 on finding periodic signals in noisy time-series data (RVs over time) using a periodogram analysis.
 However, gaps in the observations (e.g. stars can only be observed during night from the ground)
-can result into strong aliases, an effect where two signals are almost indistinguishable when sampled. Aliases
+can result in strong aliases, an effect where two signals are almost indistinguishable when sampled. Aliases
 normally occur at $f_{\text{Alias}}=f_{\text{True}}\pm m \cdot f_{\text{Sampling}}$ where $f_{\text{True}}$
 is the true signal, $f_{\text{Sampling}}$ the sampling frequency and $m$ an integer value.
 This makes it difficult to assess the true period of the planet and has already led to incorrectly published
@@ -46,8 +46,8 @@ original data sampling and noise level and inject one of the signals observed wi
  ``AliasFinder`` will than plot the median GLS periodogram [@Zechmeister2009] from the simulations of the injected
 signal overplotted with the original data periodogram. From the comparison of the signal properties (signal power,
 frequeny or phase) at the injected frequency and its aliases between these two periodograms one can
-than asses the true period of the signal. We show a straightforward example of such a plot in Fig. 1. where we test two possible true periods of a
-planet at either 2.64 d or 1.60 d which was analzed by [@Trifonov2018]. From the comparison of the simulated time series (in black) to the observed periodogram (in red) it is obvious that only the period of 2.64 d (f~0.38 1/d) is able to reproduce the data correctly.
+than assess the true period of the signal. We show a straightforward example of such a plot in Fig. 1. where we test two possible true periods of a
+planet at either 2.64 d or 1.60 d which was analyzed by [@Trifonov2018]. From the comparison of the simulated time series (in black) to the observed periodogram (in red) it is obvious that only the period of 2.64 d (f~0.38 1/d) is able to reproduce the data correctly.
 
 ``AliasFinder`` is specifically written for Python 3 and should run with a standard Anaconda distribution
 with a few additional packages. The script is executed by passing a yaml parameter file with important information
@@ -58,15 +58,15 @@ the software can in principle be used by anyone who needs to distinguish a possi
 within any noisy time-series if the correct input format is respected. The script is already
 used within Stock et al. (in prep.) and will be used in further studies in the future.
 ``AliasFinder`` is designed to be fast (multi-core support), user-friendly and produce high quality publication plots as in Fig. 1.
-This will encourage the usage of this test within future scientific publications based on time-series data,
+This software will encourage the usage of alias testing within future scientific publications based on time-series data,
 in particular RV data, and result in less incorrectly published orbital periods for exoplanets.
 
-![Example of a test for aliases. The top panel shows the resulting median periodogram (in black) derived from simulations of an ensemble of GLS periodograms where a signal of 2.64 d (marked with the vertical blue dashed line) was injected which was also observed within the original data periodogram (in red).
-The two lower panels show the simulated median periodogram where the first order aliases of 2.64 d which are at 1.6 d and 0.72 d are injected (also marked with the blue dashed line). The periodograms in each row are automatically plotted to regions that allow to distinguish the true period from its first oder aliases. The interquartile range and the range of 90\% and 99\% of the simulated periodograms are shown as the shaded grey area.
+![Example of a test for aliases. The top panel shows the resulting median periodogram (in black) derived from simulations of an ensemble of GLS periodograms where a signal of 2.64 d (marked with the vertical blue dashed line) was injected, which was also observed within the original data periodogram (in red).
+The two lower panels show the simulated median periodogram where the first order aliases of 2.64 d, which are at 1.6 d and 0.72 d, are injected (also marked with the blue dashed line). The periodograms in each row are automatically plotted to regions that allow one to distinguish the true period from its first order aliases. The interquartile range and the range of 90\% and 99\% of the simulated periodograms are shown as the shaded grey area.
 The angular mean of the phase of each peak and its standard deviation
 are shown in the clock diagram (red: simulated; grey: data).](example2.png)
 
-# Acknowledgements]
+# Acknowledgements
 
 We acknowledge contributions from Paul Heeren, and support from Sabine Reffert,
 and Trifon Trifonov during the genesis of this project. **This research made use of Astropy [@Astropy_comm] a community-developed core Python package for Astronomy [@Astropy2018]. We made use of NumPy [@oliphant2006guide], tqdm [@tqdm], SciPy [@Scipy2019] and matplotlib [@Hunter2007].**
