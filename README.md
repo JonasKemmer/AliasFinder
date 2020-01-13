@@ -7,6 +7,10 @@
 The *AliasFinder* is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
 The original method is coupled with a Monte-Carlo approach to evaluate also the impact of noise on the data.
 
+We welcome contributions in the form of bug reports,
+bug fixes, improvements to the documentation, ideas for enhancements, or the enhancements themselves!  
+Information on how to contribute can be found [here](https://github.com/JonasKemmer/AliasFinder/blob/master/contributing.md)
+
 ## Installation
 ### Using pip
 Downloads and installs the newest version from github using [pip](https://pip.pypa.io) and [git](https://git-scm.com):
