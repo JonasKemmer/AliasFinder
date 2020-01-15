@@ -41,7 +41,7 @@ orbital periods (see Dawson and Fabrcky 2010; Stock et al. in prep).
 
 ``AliasFinder`` is a Python script which can help to identify the true signal within a time series data.
 The script is based on a method described in @Dawson2010, however ``AliasFinder`` uses some improvements described
-in detail within Stock et al.(in prep.). **To our knowledge, there are no other public packages to perform alias testing based on this methodology.** The basic principle is to simulate an ensemble of noisy time-series based on the
+in detail within Stock et al.(in prep.). To our knowledge, there are no other public packages to perform alias testing based on this methodology. The basic principle is to simulate an ensemble of noisy time-series based on the
 original data sampling and noise level and inject one of the signals observed within the original data into this time-series.
  ``AliasFinder`` will then plot the median GLS periodogram [@Zechmeister2009] from the simulations of the injected
 signal overplotted with the original data periodogram. From the comparison of the signal properties (signal power,
@@ -69,6 +69,6 @@ are shown in the clock diagram (red: simulated; grey: data).](example2.png)
 # Acknowledgements
 
 We acknowledge contributions from Paul Heeren, and support from Sabine Reffert,
-and Trifon Trifonov during the genesis of this project. We would also like to thank our two referees Juan Luis Cano Rodríguez and Wilfred Tyler Gee, whose comments helped to significantly improve the quality of the ``AliasFinder`` during the publication process. **This research made use of Astropy [@Astropy_comm] a community-developed core Python package for Astronomy [@Astropy2018]. We made use of NumPy [@oliphant2006guide], tqdm [@tqdm], SciPy [@Scipy2019] and matplotlib [@Hunter2007].**
+and Trifon Trifonov during the genesis of this project. We would also like to thank our two referees Juan Luis Cano Rodríguez and Wilfred Tyler Gee, whose comments helped to significantly improve the quality of the ``AliasFinder`` during the publication process. This research made use of Astropy [@Astropy_comm] a community-developed core Python package for Astronomy [@Astropy2018]. We made use of NumPy [@oliphant2006guide], tqdm [@tqdm], SciPy [@Scipy2019] and matplotlib [@Hunter2007].
 
 # References
