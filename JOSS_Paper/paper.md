@@ -43,10 +43,10 @@ orbital periods (see Dawson and Fabrcky 2010; Stock et al. in prep).
 The script is based on a method described in @Dawson2010, however ``AliasFinder`` uses some improvements described
 in detail within Stock et al.(in prep.). **To our knowledge, there are no other public packages to perform alias testing based on this methodology.** The basic principle is to simulate an ensemble of noisy time-series based on the
 original data sampling and noise level and inject one of the signals observed within the original data into this time-series.
- ``AliasFinder`` will than plot the median GLS periodogram [@Zechmeister2009] from the simulations of the injected
+ ``AliasFinder`` will then plot the median GLS periodogram [@Zechmeister2009] from the simulations of the injected
 signal overplotted with the original data periodogram. From the comparison of the signal properties (signal power,
-frequeny or phase) at the injected frequency and its aliases between these two periodograms one can
-than assess the true period of the signal. We show a straightforward example of such a plot in Fig. 1. where we test two possible true periods of a
+frequency or phase) at the injected frequency and its aliases between these two periodograms one can
+then assess the true period of the signal. We show a straightforward example of such a plot in Fig. 1. where we test two possible true periods of a
 planet at either 2.64 d or 1.60 d which was analyzed by [@Trifonov2018]. From the comparison of the simulated time series (in black) to the observed periodogram (in red) it is obvious that only the period of 2.64 d (f~0.38 1/d) is able to reproduce the data correctly.
 
 ``AliasFinder`` is specifically written for Python 3 and should run with a standard Anaconda distribution
