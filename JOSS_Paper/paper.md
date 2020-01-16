@@ -32,7 +32,7 @@ in particular the line of sight movement of the star, due to its gravitational i
 By now the RV method is the second most successful method and the first one to find exoplanets.
 The detection of exoplanets by this method relies
 on finding periodic signals in noisy time-series data (RVs over time) using a periodogram analysis.
-However, gaps in the observations (e.g. stars can only be observed during night from the ground)
+However, gaps in the observations (e.g., stars can only be observed during night from the ground)
 can result in strong aliases, an effect where two signals are almost indistinguishable when sampled. Aliases
 normally occur at $f_{\text{Alias}}=f_{\text{True}}\pm m \cdot f_{\text{Sampling}}$ where $f_{\text{True}}$
 is the true signal, $f_{\text{Sampling}}$ the sampling frequency and $m$ an integer value.
@@ -47,7 +47,7 @@ original data sampling and noise level and inject one of the signals observed wi
 signal overplotted with the original data periodogram. From the comparison of the signal properties (signal power,
 frequency or phase) at the injected frequency and its aliases between these two periodograms one can
 then assess the true period of the signal. We show a straightforward example of such a plot in Fig. 1. where we test two possible true periods of a
-planet at either 2.64 d or 1.60 d which was analyzed by [@Trifonov2018]. From the comparison of the simulated time series (in black) to the observed periodogram (in red) it is obvious that only the period of 2.64 d (f~0.38 1/d) is able to reproduce the data correctly.
+planet at either 2.64 d or 1.60 d which was analyzed by @Trifonov2018. From the comparison of the simulated time series (in black) to the observed periodogram (in red) it is obvious that only the period of 2.64 d (f~0.38 1/d) is able to reproduce the data correctly.
 
 ``AliasFinder`` is specifically written for Python 3 and should run with a standard Anaconda distribution
 with a few additional packages. The script is executed by passing a yaml parameter file with important information
