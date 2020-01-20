@@ -6,6 +6,8 @@
 
 The *AliasFinder* is a Python script for uncomplicated alias testing based on the method introduced by [Dawson & Fabrycky (2010)](https://ui.adsabs.harvard.edu/abs/2010ApJ...722..937D/abstract). It provides publication quality plots.
 The original method is coupled with a Monte-Carlo approach to evaluate also the impact of noise on the data.
+The software is published in the JOSS journal: **[Stock and Kemmer (2020)](https://joss.theoj.org/papers/10.21105/joss.01771)**.
+
 
 We welcome contributions in the form of bug reports,
 bug fixes, improvements to the documentation, ideas for enhancements, or the enhancements themselves!  
@@ -124,6 +126,27 @@ For each row, the injected test frequency is highlighted by a blue dashed line.
 Each row shows the results for one simulated frequency. The first row corresponds to the expected true frequency, the second one to the m=-1 and the third to the m=1 alias respectively.
 Because the frequency range between the true frequency and its aliases can be huge, only subsets are shown in the range of the aliases (set with the "panel_width" keyword).
 One can thereby chose to plot only to the first order or up to the second order aliases of the likely true frequency.
+
+## Citation
+If you are using AliasFinder for your research *please cite our paper* **[Stock and Kemmer (2020)](https://joss.theoj.org/papers/10.21105/joss.01771)**.
+The BibTeX entry is:
+```
+@ARTICLE{2020JOSS....5.1771S,
+       author = {{Stock}, Stephan and {Kemmer}, Jonas},
+        title = "{AliasFinder: A Python script to search for the true planetary frequency within radial velocity data}",
+      journal = {The Journal of Open Source Software},
+     keywords = {Python, astronomy, exoplanets, signal search, radial velocity},
+         year = "2020",
+        month = "Jan",
+       volume = {5},
+       number = {45},
+          eid = {1771},
+        pages = {1771},
+          doi = {10.21105/joss.01771},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2020JOSS....5.1771S},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+```
 
 ## Example
 Testing the two peaks of P<sub>1</sub> ~2.64 d and P<sub>2</sub> ~ 1.60 d shown in [Trifonov et al. (2018)](https://ui.adsabs.harvard.edu/abs/2018A%26A...609A.117T/abstract).
