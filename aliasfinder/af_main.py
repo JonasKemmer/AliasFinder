@@ -288,9 +288,10 @@ def main():
         if params['calc_metric']:
             metric=af_calc.get_metric(gls_obs=gls_obs,
                 gls_sim_powers=gls_sim_powers)
-        print("\n")
-        print(f'rms={metric:.2f}')
-        ax = af_plots.plot_panel_row(fig, gs, metric, plot_row=sim_freq_idx,
+            print("\n")
+            print(f'rms={metric:.2f}')
+
+        ax = af_plots.plot_panel_row(fig, gs, plot_row=sim_freq_idx,
                                      panel_borders=panels, sim_freq=freq,
                                      gls_obs=gls_obs,
                                      gls_sim_powers=gls_sim_powers,

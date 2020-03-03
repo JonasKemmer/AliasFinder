@@ -150,19 +150,6 @@ def get_metric(gls_obs=None, gls_sim_powers=None):
         The GLS of the observed data.
     gls_sim_powers : array, optional
         The array which contains the power information from the simulated GLS.
-    conf_intervals : array, optional
-        An array which contains the limits of the upper an lower confidence
-        intervals which are to be grey shaded around the median of the
-        simulated powers. Should be in percentages.
-    peak_pos : array, optional
-        Array that contains the positions of the detected peaks in the GLS of
-        the observed RVs.
-    obs_phases : array, optional
-        Array containing the phase information about the detected peaks in
-        the GLS of the observed RVs.
-    sim_phases : array, optional
-        Array with the phase information for the peaks in the simulated data.
-
     """
 
     freq = gls_obs.freq[:]
