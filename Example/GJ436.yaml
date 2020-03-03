@@ -31,7 +31,7 @@ hide_xlabel: True # If set to false, xlabels will be plotted for each row
 plot_additional_period_axis: True # Whether to plot a axis in units of days
                                   # in addition on the top
 
-fbeg : 0.0001  # GLS frequency range, has no impact on the plots, but is used 
+fbeg : 0.0001  # GLS frequency range, has no impact on the plots, but is used
 fend : 2.5     # to calculate the GLS. Can be made narrower to speed up the
                # calculations
 
@@ -47,3 +47,4 @@ substract : False  # Can be used to remove a sinusoidal signal from the data bef
 
 use_rms_as_jitter : True  # Use rms of the Rvs as jitter
 jitter : 0                # Can be used to insert the jitter of a planet fit in simulated data
+calc_metric : False #calculate a comparison metric between simulated periodograms and data periodograms (for the moment rms)
