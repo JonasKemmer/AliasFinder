@@ -54,7 +54,8 @@ def main():
                       'offsets': [0],
                       'substract': False,
                       'use_rms_as_jitter': True,
-                      'jitter': 0}
+                      'jitter': 0,
+                      'calc_metric': False}
     params = {}
     for key in default_params:
         try:
@@ -284,7 +285,12 @@ def main():
                                                     params['search_phase_range'])
         ylim_max = np.nanmax([ylim_max, np.nanmax(np.percentile(gls_sim_powers,
                                                                 97.5, axis=0))])
-        ax = af_plots.plot_panel_row(fig, gs, plot_row=sim_freq_idx,
+        if params['calc_metric']:
+            metric=af_calc.get_metric(gls_obs=gls_obs,
+                gls_sim_powers=gls_sim_powers)
+        print("\n")
+        print(f'rms={metric:.2f}')
+        ax = af_plots.plot_panel_row(fig, gs, metric, plot_row=sim_freq_idx,
                                      panel_borders=panels, sim_freq=freq,
                                      gls_obs=gls_obs,
                                      gls_sim_powers=gls_sim_powers,

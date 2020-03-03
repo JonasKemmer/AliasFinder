@@ -6,7 +6,7 @@ import aliasfinder.af_utils as af_utils
 
 def get_phase_info(gls_obj, power_threshold=None, sim=False,
                    frequency_array=None):
-    """ Get infomartion on the phase of all peaks above a given power
+    """ Get information on the phase of all peaks above a given power
         threshold.
 
     Parameters
@@ -116,6 +116,7 @@ def sample_gls(times, gls_obs, freq, jitter, rvs_err, fbeg, fend, object_name,
         GLS as well as the phases of the peaks in the simulated GLS.
 
     """
+    np.random.seed()
     rvs_sim = np.ones(np.shape(times)) \
               + sim_any_sinmode(gls_obs, freq, times) \
               + np.random.normal(0, np.sqrt(jitter**2), times.size)
@@ -139,3 +140,40 @@ def sample_gls(times, gls_obs, freq, jitter, rvs_err, fbeg, fend, object_name,
                                        frequency_array=dummy_freq_array,
                                        sim=True)
     return ls_sim.power, ls_sim.freq, (peaks_sim[2] % 1) * 2. * np.pi
+
+def get_metric(gls_obs=None, gls_sim_powers=None):
+    """ The function to calculate the likelihood.
+
+    Parameters
+    ----------
+    gls_obs : object, optional
+        The GLS of the observed data.
+    gls_sim_powers : array, optional
+        The array which contains the power information from the simulated GLS.
+    conf_intervals : array, optional
+        An array which contains the limits of the upper an lower confidence
+        intervals which are to be grey shaded around the median of the
+        simulated powers. Should be in percentages.
+    peak_pos : array, optional
+        Array that contains the positions of the detected peaks in the GLS of
+        the observed RVs.
+    obs_phases : array, optional
+        Array containing the phase information about the detected peaks in
+        the GLS of the observed RVs.
+    sim_phases : array, optional
+        Array with the phase information for the peaks in the simulated data.
+
+    """
+
+    freq = gls_obs.freq[:]
+    data_powers = gls_obs.power[:]
+    sim_powers = np.median(gls_sim_powers, axis=0)
+    sigma_powers = np.std(gls_sim_powers,axis=0)
+
+    #Li=np.exp(-(data_powers-sim_powers)**2/sigma_powers**2,dtype=np.float128)
+    #chisq=(data_powers-sim_powers)**2/sigma_powers**2
+    squarediff=(data_powers-sim_powers)**2
+    L=np.sum(squarediff)
+
+
+    return L
