@@ -211,6 +211,10 @@ def main():
     f2e = np.abs(1/(params['test_period'])-params['sampling_freq']) + params['panel_width']
     f3s = np.abs(1/(params['test_period'])+params['sampling_freq']) - params['panel_width']
     f3e = np.abs(1/(params['test_period'])+params['sampling_freq']) + params['panel_width']
+    f4s = np.abs(1/(params['test_period'])-2*params['sampling_freq']) - params['panel_width']
+    f4e = np.abs(1/(params['test_period'])-2*params['sampling_freq']) + params['panel_width']
+    f5s = np.abs(1/(params['test_period'])+2*params['sampling_freq']) - params['panel_width']
+    f5e = np.abs(1/(params['test_period'])+2*params['sampling_freq']) + params['panel_width']
     # f1s = 1/(params['test_period']+params['panel_width'])
     # f1e = 1/(params['test_period']-params['panel_width'])
     # f2s = np.abs(1/(params['test_period']-params['panel_width'])-params['sampling_freq'])
@@ -220,8 +224,8 @@ def main():
     if params['alias_order'] == 1:
         panels = np.array([[f1s, f1e], [f2s, f2e], [f3s, f3e]])
     elif params['alias_order'] == 2:
-        panels = np.array([[f1s, f1e], [f2s, f2e], [f3s, f3e], [f2s+1, f2e+1],
-                           [f3s+1, f3e+1]])
+        panels = np.array([[f1s, f1e], [f2s, f2e], [f3s, f3e], [f4s, f4e],
+                           [f5s, f5e]])
     else:
         raise Exception('Orders higher than m=2 are not implemented.')
 
