@@ -70,7 +70,7 @@ def main():
     if params['sampling_freq'] is None or params['sampling_freq'] == 'None':
         # First analyze the spectral window function of the data and select a
         # sampling frequency who's aliases should be analyzed
-        window_freqs = np.linspace(params['fbeg'], params['fend'],
+        window_freqs = np.linspace(0.0001, 2.5,
                                    len(times)*25)
         window_powers = af_utils.get_spectral_window_function(window_freqs,
                                                               times)
