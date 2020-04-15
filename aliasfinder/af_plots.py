@@ -132,7 +132,7 @@ def get_theta(phase):
 
 
 def plot_phase_clock(theta_obs, theta_sim, range_sims, freq,
-                     main_axis, width=0.23):
+                     main_axis, width=0.20):
     """ Plot function for an inset phase-clock """
     trans = blended_transform_factory(main_axis.transData,
                                       main_axis.transAxes)
@@ -195,4 +195,4 @@ def plot_info(ax, freq, label=False):
 
 def convert_frequency_to_period(X):
     """ Conversion function for the optional period axis. """
-    return ["%.2f" % (1/z) for z in X]
+    return ["%.4f" % (1/z) for z in X]
