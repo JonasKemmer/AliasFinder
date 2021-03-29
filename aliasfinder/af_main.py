@@ -63,6 +63,11 @@ def main():
             params[key] = default_params[key]
             print(f'Parameter {key} is missing in the input file.\n'
                   f'Value set to default: {key} = {default_params[key]}\n')
+
+    # Check if savepath exists. If not create recursive
+    if not os.path.exists(params['savepath']):
+        os.makedirs(params['savepath'])
+
     # Read in the observed RV data
     times, rvs, rvs_err = af_utils.read_rvs(params['rv_files'],
                                             params['offsets'])
