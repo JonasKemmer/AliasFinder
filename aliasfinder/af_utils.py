@@ -14,7 +14,7 @@ def find_nearest_frequency(array, value):
 def calc_alias_freq(freq, freq_s, m):
     """ Calculates the alias given the test frequency,
         the sampling frequency and the order m."""
-    return np.abs(1/(freq)+m*freq_s)
+    return np.abs(1 / (freq) + m * freq_s)
 
 
 def read_rvs(rv_files, offsets):
@@ -38,8 +38,8 @@ def read_rvs(rv_files, offsets):
 
     alldata = []
     for k, f in enumerate(rv_files):
-        alldata.append(np.genfromtxt(f, skip_header=0, unpack=True,
-                       skip_footer=0))
+        alldata.append(
+            np.genfromtxt(f, skip_header=0, unpack=True, skip_footer=0))
     times = np.hstack(alldata[j][0] for j in range(len(alldata)))
     rvs = np.hstack(alldata[j][1] - offsets[j] for j in range(len(alldata)))
     errors = np.hstack(alldata[j][2] for j in range(len(alldata)))
@@ -50,8 +50,16 @@ def read_rvs(rv_files, offsets):
     return np.array(times), np.array(rvs), np.array(errors)
 
 
-def get_gls(t, rv, err, fbeg=0.000001, fend=1.06, object_name=None,
-            norm='ZK', ls=False, freq_array=[], verbose=False):
+def get_gls(t,
+            rv,
+            err,
+            fbeg=0.000001,
+            fend=1.06,
+            object_name=None,
+            norm='ZK',
+            ls=False,
+            freq_array=[],
+            verbose=False):
     """ Wrapper to call GLS.py from Mathias Zechmeister.
         https://github.com/mzechmeister/GLS/blob/master/python/gls.py
 
@@ -89,12 +97,24 @@ def get_gls(t, rv, err, fbeg=0.000001, fend=1.06, object_name=None,
 
     """
     if freq_array != []:
-        ls = af_gls.Gls((t, rv, err), verbose=verbose, fbeg=fbeg, fend=fend,
-                        name=object_name, norm=norm, ls=ls, ofac=20,
+        ls = af_gls.Gls((t, rv, err),
+                        verbose=verbose,
+                        fbeg=fbeg,
+                        fend=fend,
+                        name=object_name,
+                        norm=norm,
+                        ls=ls,
+                        ofac=20,
                         freq=freq_array)
     else:
-        ls = af_gls.Gls((t, rv, err), verbose=verbose, fbeg=fbeg, fend=fend,
-                        name=object_name, norm=norm, ls=ls, ofac=20)
+        ls = af_gls.Gls((t, rv, err),
+                        verbose=verbose,
+                        fbeg=fbeg,
+                        fend=fend,
+                        name=object_name,
+                        norm=norm,
+                        ls=ls,
+                        ofac=20)
 
     return ls
 
@@ -105,5 +125,5 @@ def get_spectral_window_function(freqs, times):
         (Roberts et al. 1987, Dawson & Fabrycky 2018)"""
     w_v = np.zeros(freqs.shape)
     for idx, freq in enumerate(freqs):
-        w_v[idx] = np.sum(np.exp(-2j*np.pi*freq*times))/len(times)
+        w_v[idx] = np.sum(np.exp(-2j * np.pi * freq * times)) / len(times)
     return np.abs(w_v)

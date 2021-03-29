@@ -6,10 +6,17 @@ from matplotlib.ticker import MaxNLocator, FixedLocator, NullLocator
 from scipy.stats import circmean, circstd
 
 
-def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
-                   sim_freq=None, gls_obs=None, gls_sim_powers=None,
+def plot_panel_row(fig,
+                   gs,
+                   plot_row=0,
+                   panel_borders=None,
+                   sim_freq=None,
+                   gls_obs=None,
+                   gls_sim_powers=None,
                    conf_intervals=[[25., 75.], [10., 90.], [2.5, 97.5]],
-                   peak_pos=None, obs_phases=None, sim_phases=None,
+                   peak_pos=None,
+                   obs_phases=None,
+                   sim_phases=None,
                    hide_xlabel=True):
     """ Wrapper function to plot one row that contains one simulation.
 
@@ -62,12 +69,14 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
         ax = plot_phase_information(ax, peak_pos, obs_phases, sim_phases)
         if np.logical_and(hide_xlabel, plot_row == 2) or not hide_xlabel:
             if len(panel_borders) == 3:
-                ax.xaxis.set_major_locator(MaxNLocator(nbins=3, prune='both',
-                                                       min_n_ticks=2))
+                ax.xaxis.set_major_locator(
+                    MaxNLocator(nbins=3, prune='both', min_n_ticks=2))
             else:
-                loc = FixedLocator(np.round([panel[0]+0.8*(panel[1]-panel[0])/3,
-                                             panel[0]+2.2*(panel[1]-panel[0])/3],
-                                            4))
+                loc = FixedLocator(
+                    np.round([
+                        panel[0] + 0.8 * (panel[1] - panel[0]) / 3,
+                        panel[0] + 2.2 * (panel[1] - panel[0]) / 3
+                    ], 4))
                 ax.xaxis.set_major_locator(loc)
         else:
             ax.xaxis.set_major_locator(NullLocator())
@@ -79,7 +88,7 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
             ax.plot((1 - d, 1 + d), (-d, +d), **kwargs)
             ax.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)
             ax.spines['right'].set_visible(False)
-        elif panel_idx < len(panel_borders)-1:
+        elif panel_idx < len(panel_borders) - 1:
             ax.set_yticks([])
             kwargs = dict(transform=ax.transAxes, color='k', clip_on=False)
             ax.plot((-d, +d), (-d, +d), **kwargs)
@@ -100,7 +109,9 @@ def plot_panel_row(fig, gs, plot_row=0, panel_borders=None,
     return axes_row
 
 
-def plot_lines(ax, gls_obs, gls_sim_powers,
+def plot_lines(ax,
+               gls_obs,
+               gls_sim_powers,
                intervals=[[25., 75.], [10., 90.], [2.5, 97.5]],
                alph_int=[0.8, 0.5, 0.2]):
     """ Plots the observed data and the simulated data and
@@ -118,10 +129,12 @@ def plot_lines(ax, gls_obs, gls_sim_powers,
     sim_powers = np.median(gls_sim_powers, axis=0)[panel_mask]
     ax.plot(freq, sim_powers, color='black', linestyle='-')
     for alpha, percentile in zip(alph_int, intervals):
-        lower, upper = np.percentile(gls_sim_powers, percentile,
-                                     axis=0)
-        ax.fill_between(freq, lower[panel_mask], upper[panel_mask],
-                        facecolor='gray', alpha=alpha)
+        lower, upper = np.percentile(gls_sim_powers, percentile, axis=0)
+        ax.fill_between(freq,
+                        lower[panel_mask],
+                        upper[panel_mask],
+                        facecolor='gray',
+                        alpha=alpha)
     ax.plot(freq, gls_obs.power[panel_mask], color='red', linestyle='-')
     return ax
 
@@ -131,12 +144,18 @@ def get_theta(phase):
     return (phase % 1) * 2 * np.pi
 
 
-def plot_phase_clock(theta_obs, theta_sim, range_sims, freq,
-                     main_axis, width=0.20):
+def plot_phase_clock(theta_obs,
+                     theta_sim,
+                     range_sims,
+                     freq,
+                     main_axis,
+                     width=0.20):
     """ Plot function for an inset phase-clock """
-    trans = blended_transform_factory(main_axis.transData,
-                                      main_axis.transAxes)
-    ax_sub = inset_axes(main_axis, width=width, height=width, loc=10,
+    trans = blended_transform_factory(main_axis.transData, main_axis.transAxes)
+    ax_sub = inset_axes(main_axis,
+                        width=width,
+                        height=width,
+                        loc=10,
                         bbox_to_anchor=(freq, 0.85),
                         bbox_transform=trans,
                         borderpad=0.0,
@@ -144,10 +163,13 @@ def plot_phase_clock(theta_obs, theta_sim, range_sims, freq,
     radii = [90]
     ax_sub.vlines(theta_obs, 0, radii, color='red')
     ax_sub.vlines(theta_sim, 0, radii, color='black')
-    ax_sub.fill_between(np.linspace(range_sims[0], range_sims[1], 100), 0,
-                        radii, color='gray', alpha=0.6)
+    ax_sub.fill_between(np.linspace(range_sims[0], range_sims[1], 100),
+                        0,
+                        radii,
+                        color='gray',
+                        alpha=0.6)
     ax_sub.set_theta_direction(-1)
-    ax_sub.set_theta_offset(np.pi/2.0)
+    ax_sub.set_theta_offset(np.pi / 2.0)
     ax_sub.set_thetagrids([])
     ax_sub.set_yticks([])
     return main_axis
@@ -163,16 +185,13 @@ def plot_phase_information(ax, peak_pos, obs_phases, sim_phases):
     """
     sim_mean_phases = circmean(sim_phases, axis=0)
     sim_phase_stds = circstd(sim_phases, axis=0)
-    sim_phase_ranges = np.array((sim_mean_phases-sim_phase_stds,
-                                 sim_mean_phases+sim_phase_stds)).T
+    sim_phase_ranges = np.array(
+        (sim_mean_phases - sim_phase_stds, sim_mean_phases + sim_phase_stds)).T
     lower_freq, upper_freq = ax.get_xlim()
-    for freq, obs_phase, sim_phase, sim_phase_range in zip(peak_pos,
-                                                           obs_phases,
-                                                           sim_mean_phases,
-                                                           sim_phase_ranges):
+    for freq, obs_phase, sim_phase, sim_phase_range in zip(
+            peak_pos, obs_phases, sim_mean_phases, sim_phase_ranges):
         if lower_freq < freq < upper_freq:
-            plot_phase_clock(get_theta(obs_phase), sim_phase,
-                             sim_phase_range,
+            plot_phase_clock(get_theta(obs_phase), sim_phase, sim_phase_range,
                              freq, ax)
     return ax
 
@@ -195,4 +214,4 @@ def plot_info(ax, freq, label=False):
 
 def convert_frequency_to_period(X):
     """ Conversion function for the optional period axis. """
-    return ["%.4f" % (1/z) for z in X]
+    return ["%.4f" % (1 / z) for z in X]

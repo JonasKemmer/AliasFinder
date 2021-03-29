@@ -34,6 +34,7 @@ from numpy import sum, pi, cos, sin, arctan2, exp, log, sqrt,\
 __version__ = '2018-12-18'
 __author__ = 'Mathias Zechmeister, Stefan Czesla'
 
+
 class Gls:
     """
     Compute the Generalized Lomb-Scargle (GLS) periodogram.
@@ -114,9 +115,25 @@ class Gls:
     >>> gls.plot(block=True)
     """
     # Available normalizations
-    norms = ['ZK', 'Scargle', 'HorneBaliunas', 'Cumming', 'wrms', 'chisq', 'lnL', 'dlnL']
+    norms = [
+        'ZK', 'Scargle', 'HorneBaliunas', 'Cumming', 'wrms', 'chisq', 'lnL',
+        'dlnL'
+    ]
 
-    def __init__(self, lc, fbeg=None, fend=None, Pbeg=None, Pend=None, ofac=10, hifac=1, freq=None, norm="ZK", ls=False, fast=False, verbose=False, **kwargs):
+    def __init__(self,
+                 lc,
+                 fbeg=None,
+                 fend=None,
+                 Pbeg=None,
+                 Pend=None,
+                 ofac=10,
+                 hifac=1,
+                 freq=None,
+                 norm="ZK",
+                 ls=False,
+                 fast=False,
+                 verbose=False,
+                 **kwargs):
 
         self._freq = freq
         self.fbeg = fbeg
@@ -128,8 +145,10 @@ class Gls:
         self.ls = ls
         self.norm = norm
         self.fast = fast
-        self.label = {'title': 'Generalized Lomb Periodogram',
-                      'xlabel': 'Frequency'}
+        self.label = {
+            'title': 'Generalized Lomb Periodogram',
+            'xlabel': 'Frequency'
+        }
 
         self._normcheck(norm)
 
@@ -159,11 +178,11 @@ class Gls:
         if isinstance(lc, str):
             # A data file has been given.
             try:
-               self.df = lc
-               lc = np.genfromtxt(lc, unpack=True)[0:3]
+                self.df = lc
+                lc = np.genfromtxt(lc, unpack=True)[0:3]
             except Exception as e:
-               print("An error occurred while trying to read data file:")
-               print("  " + str(e))
+                print("An error occurred while trying to read data file:")
+                print("  " + str(e))
 
         if isinstance(lc, (tuple, list, np.ndarray)):
             # t, y[, e_y] were given as list or tuple.
@@ -186,7 +205,8 @@ class Gls:
         self.N = len(self.y)
 
         # Re-check array length compatibility.
-        if (len(self.th) != self.N) or ((self.e_y is not None) and (len(self.e_y) != self.N)):
+        if (len(self.th) != self.N) or ((self.e_y is not None) and
+                                        (len(self.e_y) != self.N)):
             raise(ValueError("Incompatible dimensions of input data arrays (time and flux [and error]). Current shapes are: " + \
                              ', '.join(str(np.shape(x)) for x in (self.t, self.y, self.e_y))))
 
@@ -198,8 +218,8 @@ class Gls:
         fnyq : float
             Half of the average sampling frequency of the time series.
         """
-        self.fstep = 1 / self.tbase / self.ofac   # frequency sampling depends on the time span, default for start frequency
-        self.fnyq = 0.5 / self.tbase * self.N     # Nyquist frequency
+        self.fstep = 1 / self.tbase / self.ofac  # frequency sampling depends on the time span, default for start frequency
+        self.fnyq = 0.5 / self.tbase * self.N  # Nyquist frequency
         self.f = self._freq
 
         if self.f is None:
@@ -215,13 +235,13 @@ class Gls:
 
             self.f = arange(self.fbeg, self.fend, self.fstep)
         elif self.fast:
-            raise(ValueError("freq and fast cannot be used together."))
+            raise (ValueError("freq and fast cannot be used together."))
 
-        self.freq = self.f   # alias name
+        self.freq = self.f  # alias name
         self.nf = len(self.f)
 
         # An ad-hoc estimate of the number of independent frequencies (Eq. (24) in ZK_09).
-        self.M = (self.fend-self.fbeg) * self.tbase
+        self.M = (self.fend - self.fbeg) * self.tbase
 
     def _calcPeriodogram(self):
 
@@ -232,10 +252,10 @@ class Gls:
         self.wsum = w.sum()
         w /= self.wsum
 
-        self._Y = dot(w, self.y)       # Eq. (7)
-        wy = self.y - self._Y          # Subtract weighted mean
-        self._YY = dot(w, wy**2)       # Eq. (10), weighted variance with offset only
-        wy *= w                        # attach errors
+        self._Y = dot(w, self.y)  # Eq. (7)
+        wy = self.y - self._Y  # Subtract weighted mean
+        self._YY = dot(w, wy**2)  # Eq. (10), weighted variance with offset only
+        wy *= w  # attach errors
 
         C, S, YC, YS, CC, CS = np.zeros((6, self.nf))
 
@@ -243,12 +263,13 @@ class Gls:
             # Prepare trigonometric recurrences.
             eid = exp(2j * pi * self.fstep * self.th)  # cos(dx)+i sin(dx)
 
-        for k, omega in enumerate(2.*pi*self.f):
+        for k, omega in enumerate(2. * pi * self.f):
             # Circular frequencies.
             if self.fast:
                 if k % 1000 == 0:
                     # init/refresh recurrences to stop error propagation
-                    eix = exp(1j * omega * self.th)  # exp(ix) = cos(x) + i*sin(x)
+                    eix = exp(1j * omega *
+                              self.th)  # exp(ix) = cos(x) + i*sin(x)
                 cosx = eix.real
                 sinx = eix.imag
             else:
@@ -256,31 +277,32 @@ class Gls:
                 cosx = cos(x)
                 sinx = sin(x)
 
-            C[k] = dot(w, cosx)         # Eq. (8)
-            S[k] = dot(w, sinx)         # Eq. (9)
+            C[k] = dot(w, cosx)  # Eq. (8)
+            S[k] = dot(w, sinx)  # Eq. (9)
 
-            YC[k] = dot(wy, cosx)       # Eq. (11)
-            YS[k] = dot(wy, sinx)       # Eq. (12)
+            YC[k] = dot(wy, cosx)  # Eq. (11)
+            YS[k] = dot(wy, sinx)  # Eq. (12)
             wcosx = w * cosx
-            CC[k] = dot(wcosx, cosx)    # Eq. (13)
-            CS[k] = dot(wcosx, sinx)    # Eq. (15)
+            CC[k] = dot(wcosx, cosx)  # Eq. (13)
+            CS[k] = dot(wcosx, sinx)  # Eq. (15)
 
             if self.fast:
-               eix *= eid              # increase freq for next loop
+                eix *= eid  # increase freq for next loop
 
         SS = 1. - CC
         if not self.ls:
-            CC -= C * C            # Eq. (13)
-            SS -= S * S            # Eq. (14)
-            CS -= C * S            # Eq. (15)
-        D = CC*SS - CS*CS          # Eq. (6)
+            CC -= C * C  # Eq. (13)
+            SS -= S * S  # Eq. (14)
+            CS -= C * S  # Eq. (15)
+        D = CC * SS - CS * CS  # Eq. (6)
 
-        self._a = (YC*SS-YS*CS) / D
-        self._b = (YS*CC-YC*CS) / D
-        self._off = -self._a*C - self._b*S
+        self._a = (YC * SS - YS * CS) / D
+        self._b = (YS * CC - YC * CS) / D
+        self._off = -self._a * C - self._b * S
 
         # power
-        self.p = (SS*YC*YC + CC*YS*YS - 2.*CS*YC*YS) / (self._YY*D)   # Eq. (5) in ZK09
+        self.p = (SS * YC * YC + CC * YS * YS - 2. * CS * YC * YS) / (
+            self._YY * D)  # Eq. (5) in ZK09
 
     def _normcheck(self, norm):
         """
@@ -308,25 +330,26 @@ class Gls:
         self._normcheck(norm)
         self.norm = norm
         p = self.p
-        power = p   # default ZK
-        self.label["ylabel"] = "Power ("+norm+")"
+        power = p  # default ZK
+        self.label["ylabel"] = "Power (" + norm + ")"
 
         if norm == "Scargle":
-            popvar = input('pyTiming::gls - Input a priori known population variance:')
+            popvar = input(
+                'pyTiming::gls - Input a priori known population variance:')
             power = p / float(popvar)
         elif norm == "HorneBaliunas":
-            power = (self.N-1)/2. * p
+            power = (self.N - 1) / 2. * p
         elif norm == "Cumming":
-            power = (self.N-3)/2. * p / (1.-self.p.max())
+            power = (self.N - 3) / 2. * p / (1. - self.p.max())
         elif norm == "chisq":
-            power = self._YY *self.wsum * (1.-p)
+            power = self._YY * self.wsum * (1. - p)
             self.label["ylabel"] = "chisq"
         elif norm == "wrms":
-            power = sqrt(self._YY*(1.-p))
+            power = sqrt(self._YY * (1. - p))
             self.label["ylabel"] = "wrms"
         elif norm == "lnL":
-            chi2 = self._YY *self.wsum * (1.-p)
-            power = -0.5*chi2 - 0.5*np.sum(np.log(2*np.pi * self.e_y**2))
+            chi2 = self._YY * self.wsum * (1. - p)
+            power = -0.5 * chi2 - 0.5 * np.sum(np.log(2 * np.pi * self.e_y**2))
             self.label["ylabel"] = "lnL"
         elif norm == "dlnL":
             # dlnL = lnL - lnL0 = -0.5 chi^2 + 0.5 chi0^2 = 0.5 (chi0^2 - chi^2) = 0.5 chi0^2 p
@@ -343,33 +366,33 @@ class Gls:
         k = self.p.argmax()
         # Maximum power
         self.pmax = pmax = self.p[k]
-        self.rms = rms = sqrt(self._YY*(1.-pmax))
+        self.rms = rms = sqrt(self._YY * (1. - pmax))
 
         # Statistics of highest peak
-        self.hpstat = self.best = p = {}   # alias name for best and hpstat
+        self.hpstat = self.best = p = {}  # alias name for best and hpstat
 
         # Best parameters
         p["f"] = fbest = self.f[k]
         p["P"] = 1. / fbest
         p["amp"] = amp = sqrt(self._a[k]**2 + self._b[k]**2)
-        p["ph"] = ph = arctan2(self._a[k], self._b[k]) / (2.*pi)
-        p["T0"]  = self.t.min() - ph/fbest
-        p["offset"] = self._off[k] + self._Y            # Re-add the mean.
+        p["ph"] = ph = arctan2(self._a[k], self._b[k]) / (2. * pi)
+        p["T0"] = self.t.min() - ph / fbest
+        p["offset"] = self._off[k] + self._Y  # Re-add the mean.
 
         # Error estimates
-        p["e_amp"] = sqrt(2./self.N) * rms
-        p["e_ph"] = e_ph = sqrt(2./self.N) * rms/amp/(2.*pi)
+        p["e_amp"] = sqrt(2. / self.N) * rms
+        p["e_ph"] = e_ph = sqrt(2. / self.N) * rms / amp / (2. * pi)
         p["e_T0"] = e_ph / fbest
-        p["e_offset"] = sqrt(1./self.N) * rms
+        p["e_offset"] = sqrt(1. / self.N) * rms
 
         # Get the curvature in the power peak by fitting a parabola y=aa*x^2
-        if 1 < k < self.nf-2:
+        if 1 < k < self.nf - 2:
             # Shift the parabola origin to power peak
-            xh = (self.f[k-1:k+2] - self.f[k])**2
-            yh = self.p[k-1:k+2] - pmax
+            xh = (self.f[k - 1:k + 2] - self.f[k])**2
+            yh = self.p[k - 1:k + 2] - pmax
             # Calculate the curvature (final equation from least square)
             aa = dot(yh, xh) / dot(xh, xh)
-            p["e_f"] = e_f = sqrt(-2./self.N / aa * (1.-self.pmax))
+            p["e_f"] = e_f = sqrt(-2. / self.N / aa * (1. - self.pmax))
             p["e_P"] = e_f / fbest**2
         else:
             p["e_f"] = np.nan
@@ -402,40 +425,41 @@ class Gls:
 
         try:
             p = self.best
-            return p["amp"] * sin(2*np.pi*p["f"]*(t-p["T0"])) + p["offset"]
+            return p["amp"] * sin(2 * np.pi * p["f"] *
+                                  (t - p["T0"])) + p["offset"]
         except Exception as e:
             print("Failed to calcuate best-fit sine curve.")
-            raise(e)
+            raise (e)
 
     def info(self, stdout=True):
         """
         Prints some basic statistical output screen.
         """
         lines = ("Generalized LS - statistical output",
-           "-----------------------------------",
-           "Number of input points:     %6d" % self.N,
-           "Weighted mean of dataset:   %f"  % self._Y,
-           "Weighted rms of dataset:    %f"  % sqrt(self._YY),
-           "Time base:                  %f"  % self.tbase,
-           "Number of frequency points: %6d" % self.nf,
-           "",
-           "Maximum power p [%s]: %f" % (self.norm, self.power.max()),
-           "RMS of residuals:     %f" % self.rms)
+                 "-----------------------------------",
+                 "Number of input points:     %6d" % self.N,
+                 "Weighted mean of dataset:   %f" % self._Y,
+                 "Weighted rms of dataset:    %f" % sqrt(self._YY),
+                 "Time base:                  %f" % self.tbase,
+                 "Number of frequency points: %6d" % self.nf, "",
+                 "Maximum power p [%s]: %f" % (self.norm, self.power.max()),
+                 "RMS of residuals:     %f" % self.rms)
         if self.e_y is not None:
-           lines += "  Mean weighted internal error:  %f" % (sqrt(self.N/sum(1./self.e_y**2))),
+            lines += "  Mean weighted internal error:  %f" % (sqrt(
+                self.N / sum(1. / self.e_y**2))),
         lines += (
-           "Best sine frequency:  {f:f} +/- {e_f:f}",
-           "Best sine period:     {P:f} +/- {e_P:f}",
-           "Amplitude:            {amp:f} +/- {e_amp:f}",
-           #"Phase (ph):          {ph:f} +/- {e_ph:f}",
-           #"Phase (T0):          {T0:f} +/- {e_T0:f}",
-           #"Offset:              {offset:f} +/- {e_offset:f}",
-           "-----------------------------------")
+            "Best sine frequency:  {f:f} +/- {e_f:f}",
+            "Best sine period:     {P:f} +/- {e_P:f}",
+            "Amplitude:            {amp:f} +/- {e_amp:f}",
+            #"Phase (ph):          {ph:f} +/- {e_ph:f}",
+            #"Phase (T0):          {T0:f} +/- {e_T0:f}",
+            #"Offset:              {offset:f} +/- {e_offset:f}",
+            "-----------------------------------")
         text = "\n".join(lines).format(**self.best)
         if stdout:
-           print(text)
+            print(text)
         else:
-           return text
+            return text
 
     def plot(self, block=False, period=False):
         """
@@ -445,72 +469,88 @@ class Gls:
             import matplotlib
             import matplotlib.pylab as mpl
         except ImportError:
-            raise(ImportError("Could not import matplotlib.pylab."))
+            raise (ImportError("Could not import matplotlib.pylab."))
 
         fbest, T0 = self.best["f"], self.best["T0"]
 
         fig = mpl.figure()
         fig.canvas.set_window_title('GLS periodogram')
-        fig.subplots_adjust(hspace=0.05, wspace=0.04, right=0.97, bottom=0.09, top=0.84)
-        fs = 10   # fontsize
+        fig.subplots_adjust(hspace=0.05,
+                            wspace=0.04,
+                            right=0.97,
+                            bottom=0.09,
+                            top=0.84)
+        fs = 10  # fontsize
 
         # Periodogram
         plt = fig.add_subplot(3, 1, 1)
         plt.tick_params(direction='in')
         if period:
-           plt.set_xscale("log")
-           plt.set_xlabel("Period P")
+            plt.set_xscale("log")
+            plt.set_xlabel("Period P")
         else:
-           plt.set_xlabel("Frequency f")
+            plt.set_xlabel("Frequency f")
 
         plt.set_ylabel(self.label["ylabel"])
-        plt.plot(1/self.f if period else self.f, self.power, 'b-', linewidth=.5)
+        plt.plot(1 / self.f if period else self.f,
+                 self.power,
+                 'b-',
+                 linewidth=.5)
         # mark the highest peak
-        plt.plot(1/fbest if period else fbest, self.power[self.p.argmax()], 'r.', label="1/f = %f" % (1/fbest))
+        plt.plot(1 / fbest if period else fbest,
+                 self.power[self.p.argmax()],
+                 'r.',
+                 label="1/f = %f" % (1 / fbest))
         plt.legend(numpoints=1, fontsize=fs, frameon=False)
 
-        x2tics = 1/np.array([0.5, 1, 2, 3, 5, 10, 20., 100])
-        mx2tics = 1/np.array([0.75, 1.5, 2.5, 4, 15, 40, 60., 80, 100])
+        x2tics = 1 / np.array([0.5, 1, 2, 3, 5, 10, 20., 100])
+        mx2tics = 1 / np.array([0.75, 1.5, 2.5, 4, 15, 40, 60., 80, 100])
+
         def tick_function(X):
-           return ["%g" % (1/z) for z in X]
+            return ["%g" % (1 / z) for z in X]
 
         plt.tick_params(direction='in', which='both', top=True, right=True)
         plt.minorticks_on()
         plt.autoscale(enable=True, axis='x', tight=True)
         if not period:
-           ax2 = plt.twiny()
-           ax2.tick_params(direction='in', which='both')
-           ax2.format_coord = lambda x,y: "x=%g, x2=%g, y=%g"% (x, 1/x, y)
-           ax2.set_xticks(x2tics)
-           ax2.set_xticks(mx2tics, minor=True)
-           ax2.set_xticklabels(tick_function(x2tics))
-           ax2.set_xlim(plt.get_xlim())
-           ax2.set_xlabel("Period")
-           plt.tick_params(top=False)
+            ax2 = plt.twiny()
+            ax2.tick_params(direction='in', which='both')
+            ax2.format_coord = lambda x, y: "x=%g, x2=%g, y=%g" % (x, 1 / x, y)
+            ax2.set_xticks(x2tics)
+            ax2.set_xticks(mx2tics, minor=True)
+            ax2.set_xticklabels(tick_function(x2tics))
+            ax2.set_xlim(plt.get_xlim())
+            ax2.set_xlabel("Period")
+            plt.tick_params(top=False)
 
         # Data and model
         col = mpl.cm.rainbow(mpl.Normalize()(self.t))
+
         def plot_ecol(plt, x, y):
-           # script for scatter plot with errorbars and time color-coded
-           datstyle = dict(color=col, marker='.', edgecolor='k', linewidth=0.5, zorder=2)
-           if self.e_y is not None:
-              errstyle = dict(yerr=self.e_y, marker='', ls='', elinewidth=0.5)
-              if matplotlib.__version__ < '2.' :
-                 errstyle['capsize'] = 0.
-                 datstyle['s'] = 8**2   # requires square size !?
-              else:
-                 errstyle['ecolor'] = col
-              _, _, (c,) = plt.errorbar(x, y, **errstyle)
-              if matplotlib.__version__ < '2.':
-                 c.set_color(col)
-           plt.scatter(x, y, **datstyle)
+            # script for scatter plot with errorbars and time color-coded
+            datstyle = dict(color=col,
+                            marker='.',
+                            edgecolor='k',
+                            linewidth=0.5,
+                            zorder=2)
+            if self.e_y is not None:
+                errstyle = dict(yerr=self.e_y, marker='', ls='', elinewidth=0.5)
+                if matplotlib.__version__ < '2.':
+                    errstyle['capsize'] = 0.
+                    datstyle['s'] = 8**2  # requires square size !?
+                else:
+                    errstyle['ecolor'] = col
+                _, _, (c,) = plt.errorbar(x, y, **errstyle)
+                if matplotlib.__version__ < '2.':
+                    c.set_color(col)
+            plt.scatter(x, y, **datstyle)
 
         def phase(t):
-           #return (t-T0)*fbest % 1
-           return (t-T0) % (1/fbest)
+            #return (t-T0)*fbest % 1
+            return (t - T0) % (1 / fbest)
 
         # Time series
-        tt = arange(self.t.min(), self.t.max(), 0.01/fbest)
+        tt = arange(self.t.min(), self.t.max(), 0.01 / fbest)
         ymod = self.sinmod(tt)
         yfit = self.sinmod()
         plt1 = fig.add_subplot(3, 2, 3)
@@ -520,7 +560,7 @@ class Gls:
         plt1.plot(tt, ymod, 'k-', zorder=0)
 
         # Phase folded data
-        tt = arange(T0, T0+1/fbest, 0.01/fbest)
+        tt = arange(T0, T0 + 1 / fbest, 0.01 / fbest)
         yy = self.sinmod(tt)
         plt2 = fig.add_subplot(3, 2, 4, sharey=plt1)
         mpl.setp(plt2.get_xticklabels(), visible=False)
@@ -529,7 +569,7 @@ class Gls:
         xx = phase(tt)
         ii = np.argsort(xx)
         plt2.plot(xx[ii], yy[ii], 'k-')
-        plt2.format_coord = lambda x,y: "x=%g, x2=%g, y=%g"% (x, x*fbest, y)
+        plt2.format_coord = lambda x, y: "x=%g, x2=%g, y=%g" % (x, x * fbest, y)
 
         # Time serie of residuals
         yres = self.y - yfit
@@ -537,20 +577,20 @@ class Gls:
         plt3.set_xlabel("Time")
         plt3.set_ylabel("Residuals")
         plot_ecol(plt3, self.t, yres)
-        plt3.plot([self.t.min(), self.t.max()], [0,0], 'k-')
+        plt3.plot([self.t.min(), self.t.max()], [0, 0], 'k-')
 
         # Phase folded residuals
         plt4 = fig.add_subplot(3, 2, 6, sharex=plt2, sharey=plt3)
         plt4.set_xlabel("Phase")
         mpl.setp(plt4.get_yticklabels(), visible=False)
         plot_ecol(plt4, phase(self.t), yres)
-        plt4.plot([0,1/fbest], [0,0], 'k-')
-        plt4.format_coord = lambda x,y: "x=%g, x2=%g, y=%g"% (x, x*fbest, y)
+        plt4.plot([0, 1 / fbest], [0, 0], 'k-')
+        plt4.format_coord = lambda x, y: "x=%g, x2=%g, y=%g" % (x, x * fbest, y)
 
         for x in [plt1, plt2, plt3, plt4]:
-           x.tick_params(direction='in', which='both', top=True, right=True)
-           x.minorticks_on()
-           x.autoscale(enable=True, tight=True)
+            x.tick_params(direction='in', which='both', top=True, right=True)
+            x.minorticks_on()
+            x.autoscale(enable=True, tight=True)
 
         if hasattr(mpl.get_current_fig_manager(), 'toolbar'):
             # check seems not needed when "TkAgg" is set
@@ -558,20 +598,26 @@ class Gls:
         #t = fig.canvas.toolbar
         #mpl.ToggleTool(mpl.wx_ids['Pan'], False)
         if block:
-           print("Close the plot to continue.")
+            print("Close the plot to continue.")
         else:
-           mpl.ion()
+            mpl.ion()
 
-        fig.tight_layout()   # to get the left margin
+        fig.tight_layout()  # to get the left margin
         marleft = fig.subplotpars.left * fig.get_figwidth() * fig.dpi / fs
+
         def tighter():
-           # keep margin tight when resizing
-           xdpi = fs / (fig.get_figwidth() * fig.dpi)
-           ydpi = fs / (fig.get_figheight() * fig.dpi)
-           fig.subplots_adjust(bottom=4.*ydpi, top=1-8.*ydpi, right=1-1*xdpi, wspace=4*xdpi, hspace=4*ydpi, left=marleft*xdpi)
-           if matplotlib.__version__ < '2.':
-              ax2.set_position(plt.get_position().translated(0,4*ydpi))
-           plt.set_position(plt.get_position().translated(0,4*ydpi))
+            # keep margin tight when resizing
+            xdpi = fs / (fig.get_figwidth() * fig.dpi)
+            ydpi = fs / (fig.get_figheight() * fig.dpi)
+            fig.subplots_adjust(bottom=4. * ydpi,
+                                top=1 - 8. * ydpi,
+                                right=1 - 1 * xdpi,
+                                wspace=4 * xdpi,
+                                hspace=4 * ydpi,
+                                left=marleft * xdpi)
+            if matplotlib.__version__ < '2.':
+                ax2.set_position(plt.get_position().translated(0, 4 * ydpi))
+            plt.set_position(plt.get_position().translated(0, 4 * ydpi))
 
         #fig.canvas.mpl_connect("resize_event", lambda _: (fig.tight_layout()))
         fig.canvas.mpl_connect("resize_event", lambda _: (tighter()))
@@ -606,12 +652,18 @@ class Gls:
             higher than the threshold from the noise.
         """
         self._normcheck(self.norm)
-        if self.norm == "ZK": return (1.-Pn)**((self.N-3.)/2.)
-        if self.norm == "Scargle": return exp(-Pn)
-        if self.norm == "HorneBaliunas": return (1.-2.*Pn/(self.N-1.))**((self.N-3.)/2.)
-        if self.norm == "Cumming": return (1.+2.*Pn/(self.N-3.))**(-(self.N-3.)/2.)
-        if self.norm == "wrms": return (Pn**2/self._YY)**((self.N-3.)/2.)
-        if self.norm == "chisq": return (Pn/self._YY/self.wsum)**((self.N-3.)/2.)
+        if self.norm == "ZK":
+            return (1. - Pn)**((self.N - 3.) / 2.)
+        if self.norm == "Scargle":
+            return exp(-Pn)
+        if self.norm == "HorneBaliunas":
+            return (1. - 2. * Pn / (self.N - 1.))**((self.N - 3.) / 2.)
+        if self.norm == "Cumming":
+            return (1. + 2. * Pn / (self.N - 3.))**(-(self.N - 3.) / 2.)
+        if self.norm == "wrms":
+            return (Pn**2 / self._YY)**((self.N - 3.) / 2.)
+        if self.norm == "chisq":
+            return (Pn / self._YY / self.wsum)**((self.N - 3.) / 2.)
 
     def probInv(self, Prob):
         """
@@ -628,12 +680,18 @@ class Gls:
             The minimum power for the given false-alarm probability threshold.
         """
         self._normcheck(self.norm)
-        if self.norm == "ZK": return 1.-Prob**(2./(self.N-3.))
-        if self.norm == "Scargle": return -log(Prob)
-        if self.norm == "HorneBaliunas": return (self.N-1) / 2. * (1.-Prob**(2./(self.N-3)))
-        if self.norm == "Cumming": return (self.N-3) / 2. * (Prob**(-2./(self.N-3.))-1.)
-        if self.norm == "wrms": return sqrt(self._YY * Prob**(2./(self.N-3.)))
-        if self.norm == "chisq": return self._YY * self.wsum * Prob**(2./(self.N-3.))
+        if self.norm == "ZK":
+            return 1. - Prob**(2. / (self.N - 3.))
+        if self.norm == "Scargle":
+            return -log(Prob)
+        if self.norm == "HorneBaliunas":
+            return (self.N - 1) / 2. * (1. - Prob**(2. / (self.N - 3)))
+        if self.norm == "Cumming":
+            return (self.N - 3) / 2. * (Prob**(-2. / (self.N - 3.)) - 1.)
+        if self.norm == "wrms":
+            return sqrt(self._YY * Prob**(2. / (self.N - 3.)))
+        if self.norm == "chisq":
+            return self._YY * self.wsum * Prob**(2. / (self.N - 3.))
 
     def FAP(self, Pn=None):
         """
@@ -656,10 +714,10 @@ class Gls:
             False alarm probability.
         """
         if Pn is None:
-           Pn = self.pmax
+            Pn = self.pmax
         prob = self.M * self.prob(Pn)
         if prob > 0.01:
-           return 1. - (1.-self.prob(Pn))**self.M
+            return 1. - (1. - self.prob(Pn))**self.M
         return prob
 
     def powerLevel(self, FAPlevel):
@@ -676,7 +734,7 @@ class Gls:
             probability (FAP). Powers exceeding this threshold have FAPs
             smaller than FAPlevel.
         """
-        Prob = 1. - (1.-FAPlevel)**(1./self.M)
+        Prob = 1. - (1. - FAPlevel)**(1. / self.M)
         return self.probInv(Prob)
 
     def stats(self, Pn):
@@ -706,14 +764,14 @@ class Gls:
         """
         with open(ofile, 'w') as f:
             if header:
-               f.write("# Generalized Lomb-Scargle periodogram\n")
-               f.write("# Parameters:\n")
-               f.write("#    Data file: %s\n" % self.df)
-               f.write("#    ofac     : %s\n" % self.ofac)
-               f.write("#    norm     : %s\n" % self.norm)
-               f.write("# 1) Frequency, 2) Normalized power\n")
+                f.write("# Generalized Lomb-Scargle periodogram\n")
+                f.write("# Parameters:\n")
+                f.write("#    Data file: %s\n" % self.df)
+                f.write("#    ofac     : %s\n" % self.ofac)
+                f.write("#    norm     : %s\n" % self.norm)
+                f.write("# 1) Frequency, 2) Normalized power\n")
             for line in zip(self.f, self.power):
-               f.write("%f  %f\n" % line)
+                f.write("%f  %f\n" % line)
 
         print("Results have been written to file: ", ofile)
 
@@ -728,42 +786,86 @@ def example():
 
 if __name__ == "__main__":
 
-  import argparse
+    import argparse
 
-  parser = argparse.ArgumentParser(description='Generalized Lomb-Scargle periodogram.', add_help=False)
-  argadd = parser.add_argument   # function short cut
-  argadd('df', nargs='?',
-                 help='Data file (three columns: time, data, error). If not specified example will be shown.')
-  argadd('-fbeg', '--fbeg', type=float, help="Starting frequency for periodogram.")
-  argadd('-fend', '--fend', type=float, help="Stopping frequency for periodogram.")
-  argadd('-Pbeg', '--Pbeg', type=float, help="Starting period for periodogram.")
-  argadd('-Pend', '--Pend', type=float, help="Stopping period for periodogram.")
-  argadd('-ofac', '--ofac', type=float, help="Oversampling factor (default=10).", default=10)
-  argadd('-hifac', '--hifac', type=float, help="Maximum frequency (default=1).", default=1)
-  argadd('-fast', '--fast', help="Use trigonometric recurrences.", action='store_true')
-  argadd('-norm', '--norm', help="The normalization (default=ZK).", choices=Gls.norms, default='ZK')
-  argadd('-ofile', '--ofile', type=str, help="Output file for results.")
-  argadd('-noplot', '--noplot', help="Suppress plots.", dest='plot', action='store_false')
-  argadd('-nostat', '--nostat', help="Switch off statistical output on screen.", dest='verbose',
-                 action='store_false')
-  argadd('-?', '-h', '-help', '--help', help='Show this help message and exit.', action='help')
+    parser = argparse.ArgumentParser(
+        description='Generalized Lomb-Scargle periodogram.', add_help=False)
+    argadd = parser.add_argument  # function short cut
+    argadd(
+        'df',
+        nargs='?',
+        help=
+        'Data file (three columns: time, data, error). If not specified example will be shown.'
+    )
+    argadd('-fbeg',
+           '--fbeg',
+           type=float,
+           help="Starting frequency for periodogram.")
+    argadd('-fend',
+           '--fend',
+           type=float,
+           help="Stopping frequency for periodogram.")
+    argadd('-Pbeg',
+           '--Pbeg',
+           type=float,
+           help="Starting period for periodogram.")
+    argadd('-Pend',
+           '--Pend',
+           type=float,
+           help="Stopping period for periodogram.")
+    argadd('-ofac',
+           '--ofac',
+           type=float,
+           help="Oversampling factor (default=10).",
+           default=10)
+    argadd('-hifac',
+           '--hifac',
+           type=float,
+           help="Maximum frequency (default=1).",
+           default=1)
+    argadd('-fast',
+           '--fast',
+           help="Use trigonometric recurrences.",
+           action='store_true')
+    argadd('-norm',
+           '--norm',
+           help="The normalization (default=ZK).",
+           choices=Gls.norms,
+           default='ZK')
+    argadd('-ofile', '--ofile', type=str, help="Output file for results.")
+    argadd('-noplot',
+           '--noplot',
+           help="Suppress plots.",
+           dest='plot',
+           action='store_false')
+    argadd('-nostat',
+           '--nostat',
+           help="Switch off statistical output on screen.",
+           dest='verbose',
+           action='store_false')
+    argadd('-?',
+           '-h',
+           '-help',
+           '--help',
+           help='Show this help message and exit.',
+           action='help')
 
-  args = vars(parser.parse_args())
-  df = args.pop('df')
-  ofile = args.pop('ofile')
-  plot = args.pop('plot')
+    args = vars(parser.parse_args())
+    df = args.pop('df')
+    ofile = args.pop('ofile')
+    plot = args.pop('plot')
 
-  if df is None:
-    # No data file given. Show example:
-    example()
-    print("Available options:")
-    parser.print_help()
-    exit(0)
+    if df is None:
+        # No data file given. Show example:
+        example()
+        print("Available options:")
+        parser.print_help()
+        exit(0)
 
-  gls = Gls(df, **args)
+    gls = Gls(df, **args)
 
-  if plot:
-     gls.plot(block=True)
+    if plot:
+        gls.plot(block=True)
 
-  if ofile:
-     gls.toFile(ofile)
+    if ofile:
+        gls.toFile(ofile)

@@ -4,7 +4,9 @@ from scipy.signal import find_peaks
 import aliasfinder.af_utils as af_utils
 
 
-def get_phase_info(gls_obj, power_threshold=None, sim=False,
+def get_phase_info(gls_obj,
+                   power_threshold=None,
+                   sim=False,
                    frequency_array=None):
     """ Get information on the phase of all peaks above a given power
         threshold.
@@ -43,7 +45,7 @@ def get_phase_info(gls_obj, power_threshold=None, sim=False,
         pmax = gls_obj.p[k]
         # Best parameters
         fbest = gls_obj.freq[k]
-        ph = np.arctan2(gls_obj._a[k], gls_obj._b[k])/(2.*np.pi)
+        ph = np.arctan2(gls_obj._a[k], gls_obj._b[k]) / (2. * np.pi)
         phases[i] = ph
         freqs[i] = fbest
         powers[i] = pmax
@@ -72,10 +74,10 @@ def sim_any_sinmode(gls_obj, in_freq, times):
     if len(k) > 1:
         k = k[0]
     amp = np.sqrt(gls_obj._a[k]**2 + gls_obj._b[k]**2)
-    ph = np.arctan2(gls_obj._a[k], gls_obj._b[k])/(2.*np.pi)
-    T0 = times.min() - ph/in_freq
+    ph = np.arctan2(gls_obj._a[k], gls_obj._b[k]) / (2. * np.pi)
+    T0 = times.min() - ph / in_freq
     offset = gls_obj._off[k] + gls_obj._Y
-    return amp * np.sin(2*np.pi*in_freq*(times-T0)) + offset
+    return amp * np.sin(2 * np.pi * in_freq * (times - T0)) + offset
 
 
 def sample_gls(times, gls_obs, freq, jitter, rvs_err, fbeg, fend, object_name,
@@ -120,26 +122,32 @@ def sample_gls(times, gls_obs, freq, jitter, rvs_err, fbeg, fend, object_name,
     rvs_sim = np.ones(np.shape(times)) \
               + sim_any_sinmode(gls_obs, freq, times) \
               + np.random.normal(0, np.sqrt(jitter**2), times.size)
-    ls_sim = af_utils.get_gls(times, rvs_sim, rvs_err, fbeg, fend, object_name,
+    ls_sim = af_utils.get_gls(times,
+                              rvs_sim,
+                              rvs_err,
+                              fbeg,
+                              fend,
+                              object_name,
                               freq_array=gls_obs.freq)
     dummy_freq_array = np.zeros(np.size(peaks_data[0]))
     # search for phases of max power using a certian frequency
     # range and the prior of data peaks
     for j in range(0, np.size(peaks_data[0])):
-        index_frequencies = np.where(np.logical_and(ls_sim.freq >= peaks_data[0][j]
-                                                    - search_phase_range,
-                                                    ls_sim.freq <= peaks_data[0][j]
-                                                    + search_phase_range))
+        index_frequencies = np.where(
+            np.logical_and(
+                ls_sim.freq >= peaks_data[0][j] - search_phase_range,
+                ls_sim.freq <= peaks_data[0][j] + search_phase_range))
         index_maxfreqs = max(np.arange(len(ls_sim.p[index_frequencies])),
                              key=ls_sim.p[index_frequencies].__getitem__)
-        index_maxfreq = np.argwhere(ls_sim.freq ==
-                                    ls_sim.freq[index_frequencies][index_maxfreqs])[0]
+        index_maxfreq = np.argwhere(
+            ls_sim.freq == ls_sim.freq[index_frequencies][index_maxfreqs])[0]
 
         dummy_freq_array[j] = ls_sim.freq[index_maxfreq]
     peaks_sim = get_phase_info(ls_sim,
-                                       frequency_array=dummy_freq_array,
-                                       sim=True)
+                               frequency_array=dummy_freq_array,
+                               sim=True)
     return ls_sim.power, ls_sim.freq, (peaks_sim[2] % 1) * 2. * np.pi
+
 
 def get_metric(gls_obs=None, gls_sim_powers=None):
     """ The function to calculate the likelihood.
@@ -155,12 +163,11 @@ def get_metric(gls_obs=None, gls_sim_powers=None):
     freq = gls_obs.freq[:]
     data_powers = gls_obs.power[:]
     sim_powers = np.median(gls_sim_powers, axis=0)
-    sigma_powers = np.std(gls_sim_powers,axis=0)
+    sigma_powers = np.std(gls_sim_powers, axis=0)
 
     #Li=np.exp(-(data_powers-sim_powers)**2/sigma_powers**2,dtype=np.float128)
     #chisq=(data_powers-sim_powers)**2/sigma_powers**2
-    squarediff=(data_powers-sim_powers)**2
-    L=np.sum(squarediff)
-
+    squarediff = (data_powers - sim_powers)**2
+    L = np.sum(squarediff)
 
     return L
