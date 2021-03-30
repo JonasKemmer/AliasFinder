@@ -1,17 +1,18 @@
-import os
+import shutil
 import sys
 import warnings
 from multiprocessing import Pool
+from pathlib import Path
 
 import matplotlib
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import yaml
-from matplotlib.widgets import Cursor
-from matplotlib.ticker import MaxNLocator
-from tqdm import tqdm
 from astropy.table import Table
+from matplotlib.ticker import MaxNLocator
+from matplotlib.widgets import Cursor
+from tqdm import tqdm
 
 import aliasfinder.af_calc as af_calc
 import aliasfinder.af_plots as af_plots
@@ -34,39 +35,55 @@ def main():
         except yaml.YAMLError as exc:
             print(exc)
     default_params = {
-        'object_name': '',
-        'savepath': './',
-        'rv_files': [],
-        'test_period': 50,
-        'sampling_freq': None,
-        'mc_samples': 100,
-        'num_processes': 1,
-        'alias_order': 1,
-        'panel_width': 1,
-        'hide_xlabel': True,
-        'plot_additional_period_axis': True,
-        'fbeg': 0.0001,
-        'fend': 2.5,
-        'power_threshold': 0.05,
-        'search_phase_range': 0.00005,
-        'offsets': [0],
-        'substract': False,
-        'use_rms_as_jitter': True,
-        'jitter': 0,
-        'calc_metric': False
+        'object_name': ['', str],
+        'savepath': ['./', str],
+        'rv_files': [[], list],
+        'test_period': [50, (float, int)],
+        'sampling_freq': [None, (type(None), float, int)],
+        'save_level': ['small', ['small', 'extended']],
+        'mc_samples': [100, int],
+        'num_processes': [1, int],
+        'alias_order': [1, (1, 2)],
+        'panel_width': [1, (float, int)],
+        'hide_xlabel': [True, bool],
+        'plot_additional_period_axis': [True, bool],
+        'fbeg': [0.0001, (float, int)],
+        'fend': [2.5, (float, int)],
+        'power_threshold': [0.05, (float, int)],
+        'search_phase_range': [0.00005, (float, int)],
+        'offsets': [[0], list],
+        'substract': [False, bool],
+        'use_rms_as_jitter': [True, bool],
+        'jitter': [0, (float, int)],
+        'calc_metric': [False, bool],
     }
     params = {}
     for key in default_params:
         try:
             params[key] = input_params[key]
+            if not isinstance(params[key], default_params[key][1]):
+                raise ValueError(
+                    f'Argument "{key}" must be {default_params[key][1]}')
+
         except KeyError:
             params[key] = default_params[key]
             print(f'Parameter {key} is missing in the input file.\n'
-                  f'Value set to default: {key} = {default_params[key]}\n')
+                  f'Value set to default: {key} = {default_params[key][0]}\n')
+        except TypeError:
+            if not params[key] in default_params[key][1]:
+                raise ValueError(
+                    f'Argument "{key}" must be in {default_params[key][1]}')
 
     # Check if savepath exists. If not create recursive
-    if not os.path.exists(params['savepath']):
-        os.makedirs(params['savepath'])
+    params['savepath'] = Path(params['savepath'])
+    params['savepath'].mkdir(parents=True, exist_ok=True)
+
+    if params['save_level'] == 'extended':
+        yaml_file = Path(sys.argv[1])
+        shutil.copy(yaml_file, params['savepath'].joinpath(yaml_file.name))
+        for file in params['rv_files']:
+            shutil.copy(Path(file),
+                        params['savepath'].joinpath(Path(file).name))
 
     # Read in the observed RV data
     times, rvs, rvs_err = af_utils.read_rvs(params['rv_files'],
@@ -110,10 +127,8 @@ def main():
                 axins.tick_params(labelsize=8)
                 ax.tick_params(labelsize=8)
                 plt.tight_layout()
-                save_string = os.path.join(
-                    params['savepath'],
-                    params['object_name'] + '_spectral_window_'
-                    'function.pdf')
+                save_string = params['savepath'].joinpath(
+                    params['object_name'] / '_spectral_window_function.pdf')
                 plt.savefig(save_string, bbox_inches='tight', dpi=400)
                 plt.close()
 
@@ -370,8 +385,8 @@ def main():
                 ax.tick_params(labelleft='off')
 
     plt.tight_layout()
-    save_string = os.path.join(
-        params['savepath'], params['object_name'] + '_' +
+    save_string = params['savepath'].joinpath(
+        params['object_name'] + '_' +
         str(params['test_period']).replace('.', 'p') + 'd_' +
         str(params['sampling_freq']).replace('.', 'p') + 'd_alias_test.pdf')
     plt.savefig(save_string, bbox_inches='tight', dpi=600)
