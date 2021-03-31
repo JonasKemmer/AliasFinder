@@ -19,7 +19,7 @@ offsets: [0] # If several RV datasets are given, these define the offsets betwee
 test_period: 2.64 # The Period which you think is the true Period of the planet given in [days]
 
 sampling_freq:
-  None # If default(=None), the sampling frequency can be chosen from the plot of the window function.
+  null # If default(=null), the sampling frequency can be chosen from the plot of the window function.
   # Otherwise a frequency [1/day] must be given.
 
 mc_samples: 100 # Number of MC samples to perform. 1000 is a good number.
