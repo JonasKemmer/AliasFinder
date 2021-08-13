@@ -52,7 +52,7 @@ def main():
         'power_threshold': [0.05, (float, int)],
         'search_phase_range': [0.00005, (float, int)],
         'offsets': [[0], list],
-        'substract': [False, bool],
+        'substract': [False, (bool, int)],
         'use_rms_as_jitter': [True, bool],
         'jitter': [0, (float, int)],
         'calc_metric': [False, bool],
