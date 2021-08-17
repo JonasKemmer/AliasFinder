@@ -3,6 +3,7 @@ import sys
 import warnings
 from multiprocessing import Pool
 from pathlib import Path
+import h5py
 
 import matplotlib
 import matplotlib.gridspec as gridspec
@@ -80,10 +81,16 @@ def main():
 
     if params['save_level'] == 'extended':
         yaml_file = Path(sys.argv[1])
-        shutil.copy(yaml_file, params['savepath'].joinpath(yaml_file.name))
+        try:
+            shutil.copy(yaml_file, params['savepath'].joinpath(yaml_file.name))
+        except shutil.SameFileError:
+            pass
         for file in params['rv_files']:
-            shutil.copy(Path(file),
-                        params['savepath'].joinpath(Path(file).name))
+            try:
+                shutil.copy(Path(file),
+                            params['savepath'].joinpath(Path(file).name))
+            except shutil.SameFileError:
+                pass
 
     # Read in the observed RV data
     times, rvs, rvs_err = af_utils.read_rvs(params['rv_files'],
@@ -189,6 +196,14 @@ def main():
     # Find peaks in the GLS of the observed RVs
     peaks_data = af_calc.get_phase_info(
         gls_obs, power_threshold=params['power_threshold'])
+    if params['save_level'] == 'extended':
+        savefile = h5py.File(params['savepath'].joinpath('savefile.h5'), 'w')
+        group = savefile.create_group(f'Observed_periodogram')
+        group.create_dataset('obs_periodogram',
+                             data=np.array([gls_obs.freq, gls_obs.power]),
+                             compression="gzip")
+        group.create_dataset('obs_peaks', data=peaks_data, compression="gzip")
+        savefile.close()
 
     # Select the Periods which are to be simulated
     sim_freqs = np.zeros(3)
@@ -300,8 +315,6 @@ def main():
 
     ylim_max = np.nanmax(gls_obs.power)
     axes = []
-    save_var = np.empty(
-        (len(sim_freqs), params['mc_samples'], len(gls_obs.power)))
     for sim_freq_idx, freq in enumerate(sim_freqs):
         print(f'\n Simulating Freq. # {sim_freq_idx+1:.0f}\n')
         gls_sim_powers = np.zeros((params['mc_samples'], len(gls_obs.power)))
@@ -344,6 +357,20 @@ def main():
             print("\n")
             print(f'rms={metric:.2f}')
 
+        if params['save_level'] == 'extended':
+            savefile = h5py.File(params['savepath'].joinpath('savefile.h5'),
+                                 'a')
+            group = savefile.create_group(f'Simulated_freq{sim_freq_idx+1}')
+            group.create_dataset('sim_freq', data=freq)
+            group.create_dataset('sim_periodograms',
+                                 data=gls_sim_powers,
+                                 compression="gzip")
+            group.create_dataset('sim_peaks_phases',
+                                 data=sim_phases,
+                                 compression="gzip")
+            group.create_dataset('rms', data=np.round(metric, 2))
+            savefile.close()
+
         ax = af_plots.plot_panel_row(fig,
                                      gs,
                                      plot_row=sim_freq_idx,
@@ -356,10 +383,6 @@ def main():
                                      sim_phases=sim_phases,
                                      hide_xlabel=params['hide_xlabel'])
         axes.append(ax)
-    #     save_var[idx] = gls_sim_powers
-    # Table(save_var).write(os.path.join(params['savepath'], 'simulated_GLS.fits'),
-    #                       overwrite=True)
-
     if params['plot_additional_period_axis']:
         fig.text(0.5, 0.96, 'Period [d]', ha='center', fontsize=8)
         for panel, base_panel in zip(axes[0], axes[-1]):
